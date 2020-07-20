@@ -1,9 +1,9 @@
 //=============== AWS Cognito IDs ===============
-const userPoolId = 'ap-southeast-1_lBwBP9VEb'; 
-const clientId = '7fdcfo50mhcqm5ui0pl0lrc88f';
-const region = 'ap-southeast-1';
-const identityPoolId = 'ap-southeast-1:09230717-dc81-41c2-9847-4d0504a8ff9f';
-const S3DocBucket = "cognito-doc-management";
+const userPoolId = ''; 
+const clientId = '';
+const region = '';
+const identityPoolId = '';
+const S3DocBucket = "";
 //==============================
 
 
