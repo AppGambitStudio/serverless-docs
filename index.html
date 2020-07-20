@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ServerlessDoc - AWS Serverless Document Management Application</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+</head>
+<body>
+    <script src="./libs/jquery.min.js"></script>	
+    <script src="./libs/aws-sdk-2.487.0.min.js"></script>
+    <script src="./libs/aws-cognito-sdk.min.js"></script>
+    <script src="./libs/amazon-cognito-identity.min.js"></script>
+    
+    <style>
+    .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    </style>
+    
+    <div class="container">
+        
+    <div class="box">
+        <h1 class="title">ServerlessDocs</h1><hr>
+        <div class="field">
+            <div class="control">
+            <input id="emailInput" type="text" class="input" placeholder="Email" style="display:none"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <input id="userNameInput" class="input" type="text" placeholder="Username"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+        <input id="passwordInput" class="input" type="password" placeholder="Password"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <input id="confirmPasswordInput" class="input" type="password" placeholder="Confirm Password" style="display:none"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <input id="verificationCodeInput" type="text" class="input" placeholder="Verification Code" style="display:none"/>
+            </div>
+        </div>
+
+        <input id="logInButton" class="button is-primary" type="Button" value="Log In" onclick="logIn()">            
+        <input id="registerButton" class="button is-primary" type="button" value="Register" onclick="register()">
+        <input id="logOutButton" class="button is-danger" type="Button" value="Log Out" onclick="logOut()" style="display:none">
+        <input id="verifyCodeButton" class="button is-primary" type="button" value="Verify" onclick="verifyCode()" style="display:none">
+        <input id="listPublicFiles" class="button" type="button" value="List Public Files" onclick="listPublicFiles()" style="display:none">
+        <input id="listMyFiles" class="button" type="button" value="List My Files" onclick="listMyFiles()" style="display:none">
+        <div class="file" style="display: inline-block">
+            <label class="file-label">
+              <input class="file-input" type="file" id="file-upload" onchange="uploadFile()">
+              <span class="file-cta" style="background-color: white;">
+                <span class="file-label">
+                  Upload File
+                </span>
+              </span>
+            </label>
+        </div>
+        <input id="clearLogsButton" class="button" type="button" value="Clear Logs" onclick="clearLogs()" style="float: right;">
+    </div>
+    </div>
+    
+    <div class="container">
+        <table id="public-files" style="display: none;" class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th width="50%">File</th>
+                    <th width="10%">Size</th>
+                    <th>Last Modified</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <table id="my-files" style="display: none;" class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th width="50%">File</th>
+                    <th width="10%">Size</th>
+                    <th>Last Modified</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <div class="notification" >
+            <div id="loader" class="loader" style="display:none"></div>
+            <div id="log" style="overflow-y: scroll;"></div>
+        </div>        
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
