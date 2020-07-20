@@ -1,9 +1,9 @@
 //=============== AWS Cognito IDs ===============
-const userPoolId = ''; 
-const clientId = '';
-const region = '';
-const identityPoolId = '';
-const S3DocBucket = "";
+const userPoolId = 'ap-southeast-1_lBwBP9VEb'; 
+const clientId = '7fdcfo50mhcqm5ui0pl0lrc88f';
+const region = 'ap-southeast-1';
+const identityPoolId = 'ap-southeast-1:09230717-dc81-41c2-9847-4d0504a8ff9f';
+const S3DocBucket = "cognito-doc-management";
 //==============================
 
 
@@ -31,6 +31,7 @@ function switchToVerificationCodeView(){
     $("#listPublicFiles").hide();
     $("#listMyFiles").hide();
     $("#logOutButton").hide();
+    $("#file-upload-ctl").hide();
 }
 
 function switchToRegisterView(){
@@ -45,6 +46,7 @@ function switchToRegisterView(){
     $("#listPublicFiles").hide();
     $("#listMyFiles").hide();
     $("#logOutButton").hide();
+    $("#file-upload-ctl").hide();
 }
 
 function switchToLogInView(){
@@ -61,6 +63,7 @@ function switchToLogInView(){
     $("#listPublicFiles").hide();
     $("#listMyFiles").hide();
     $("#logOutButton").hide();
+    $("#file-upload-ctl").hide();
     $("#public-files").hide().find('tbody').html("");
     $("#my-files").hide().find('tbody').html("");
 }
@@ -77,6 +80,7 @@ function switchToLoggedInView(){
     $("#listPublicFiles").show();
     $("#listMyFiles").show();
     $("#logOutButton").show();
+    $("#file-upload-ctl").css('display', 'inline-block');
 }
 
 function clearLogs(){
@@ -196,7 +200,11 @@ function registerUser(email, username, password){
     $("#loader").show();
     userPool.signUp(username, password, attributeList, null, function(err, result){
         if (err) {
-            logMessage(err.message, 'red');
+            if(err.message.includes('EMAIL_DOMAIN_ERR')){
+                logMessage('Your email or domain is not valid. Please signup with your company email.', 'red');
+            }else{
+                logMessage(err.message, 'red');
+            }            
         }else{
             cognitoUser = result.user;
             logMessage('Registration Successful!');
