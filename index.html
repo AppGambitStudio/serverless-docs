@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>ServerlessDoc - AWS Serverless Document Management Application</title>
+    <title>ServerlessDoc - AWS Serverless DMS App</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 </head>
 <body>
@@ -9,7 +9,8 @@
     <script src="./libs/aws-sdk-2.487.0.min.js"></script>
     <script src="./libs/aws-cognito-sdk.min.js"></script>
     <script src="./libs/amazon-cognito-identity.min.js"></script>
-    
+    <link href="./css/fontawesome.css" rel="stylesheet">
+
     <style>
     .loader {
         border: 16px solid #f3f3f3; /* Light grey */
@@ -29,7 +30,10 @@
     <div class="container">
         
     <div class="box">
-        <h1 class="title">ServerlessDocs</h1><hr>
+        <h1 class="title">ServerlessDocs</h1>
+        <h2 class="subtitle">This is a simple DMS application built using AWS Serverless technologies. Go to the document site for more detail <a href="https://app.gitbook.com/@dhaval-b-nagar/s/serverless-docs" target="_blank">https://app.gitbook.com/@dhaval-b-nagar/s/serverless-docs</a></a>.</h2>
+        <hr>
+
         <div class="field">
             <div class="control">
             <input id="emailInput" type="text" class="input" placeholder="Email" style="display:none"/>
@@ -80,8 +84,10 @@
     </div>
     </div>
     
-    <div class="container">
-        <table id="public-files" style="display: none;" class="table is-fullwidth">
+    <div class="container" id="public-files" style="display: none; padding-top: 10px;" >
+        <span style="font-size: 1.2em; font-weight: bold; " class="has-text-info">Shared Documents</span>
+        <i class="fas fa-users"></i>
+        <table class="table is-fullwidth">
             <thead>
                 <tr>
                     <th width="50%">File</th>
@@ -94,8 +100,10 @@
         </table>
     </div>
 
-    <div class="container">
-        <table id="my-files" style="display: none;" class="table is-fullwidth">
+    <div class="container" id="my-files" style="display: none; padding-top: 10px;">
+        <span style="font-size: 1.2em; font-weight: bold; " class="has-text-info">My Documents</span>
+        <i class="fas fa-lock"></i>
+        <table class="table is-fullwidth">
             <thead>
                 <tr>
                     <th width="50%">File</th>

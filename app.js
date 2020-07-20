@@ -126,7 +126,6 @@ function logIn(){
             onSuccess: function (result) {
                 logMessage('Logged in!', 'blue');
                 switchToLoggedInView();
-
                 idToken = result.getIdToken().getJwtToken();
                 getCognitoIdentityCredentials();
             },
@@ -135,7 +134,6 @@ function logIn(){
                 logMessage(err.message, 'red');
                 $("#loader").hide();
             },
-
         });
     }
 }
