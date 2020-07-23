@@ -209,10 +209,7 @@ function register(){
     }
 }
 
-/*
-Starting point for user verification using AWS Cognito with input validation
-*/
-
+//Initiate forgot password request with cognito-identity-service-provider
 function forgotPassword() {
     switchToForgotPasswordCodeView()
     document.getElementById('passwordInput').placeholder = 'New Password'
@@ -253,6 +250,7 @@ function forgotPassword() {
     }
 }
 
+//confirm forgot password action with cognito-identity-service-provider
 function confirmForgotPassword() {
     // switchToForgotPasswordCodeView()
     if( !$('#userNameInput').val() || !$('#passwordInput').val() || !$('#verificationCodeInput').val()) {
@@ -310,8 +308,8 @@ function verifyCode(){
     }
 }
 
-
-function reVerifyCode(){
+//seprate verification with cognito-identity-service-provider
+function directVerification(){
     // clearLogs();
     switchToReVerificationCodeView()
     if( !$('#verificationCodeInput' || !$('#userNameInput').val()).val() ) {
@@ -348,7 +346,7 @@ function reVerifyCode(){
     }
 }
 
-
+//function for regenerating signUp verification code using cognito-identity-service-provider
 function resendConfirmationCode(){
     if( !$('#userNameInput').val() ) {
         logMessage('Please fill Username field!', 'red');
