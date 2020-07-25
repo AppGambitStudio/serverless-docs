@@ -1,16 +1,16 @@
 //=============== AWS Cognito IDs ===============
-const userPoolId = 'us-west-2_yMGvoqyFk'; 
-const clientId = '3r4cc3ktt96137gb2e8uch9ehv';
-const region = 'us-west-2';
-const identityPoolId = 'us-west-2:a13b9d08-9716-4fda-b44b-93077e11a09a';
-const S3DocBucket = 'serverless-docs-file-bucket';
+const userPoolId = ''; 
+const clientId = '';
+const region = '';
+const identityPoolId = '';
+const S3DocBucket = '';
 //==============================
 
 //===============AWS Cognito Hosted Ui References==================
-const domainName = 'https://serverless-docs'
-const hostedUiAppClient = '56bnnl8vr9t4a2pv6tsibul7ji'
-const loggedInRedirectUrl = 'http://localhost:8080/safeHome'
-const loggedOutRedirectUrl = 'http://localhost:8080'
+const domainName = ''
+const hostedUiAppClient = ''
+const loggedInRedirectUrl = ''
+const loggedOutRedirectUrl = ''
 
 
 var cognitoUser;

@@ -1,14 +1,15 @@
 //=============== AWS Cognito IDs ===============
-const clientId = '56bnnl8vr9t4a2pv6tsibul7ji';
-const region = 'us-west-2';
-const apiGatewzayHost = 'https://ytpx6sb22a.execute-api.us-west-2.amazonaws.com'
-const lambdaEndpoint = 'cognito-token-endpoint'
+const clientId = '';
+const region = '';
+const apiGatewzayHost = ''
+const lambdaEndpoint = ''
 //==============================
 
 //===============AWS Cognito Hosted Ui References==================
-const domainName = 'https://serverless-docs'
-const loggedInRedirectUrl = 'http://localhost:8080/safeHome'
-const loggedOutRedirectUrl = 'http://localhost:8080'
+const domainName = ''
+const loggedInRedirectUrl = ''
+const loggedOutRedirectUrl = ''
+//==========================================
 
 var xmlHttp = new XMLHttpRequest();
 
@@ -31,9 +32,6 @@ function logOut() {
 function clearLogs(){
     $('#log').empty();
 }
-
-
-
 
 function getUserInfo(){
     var response
