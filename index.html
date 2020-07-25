@@ -30,37 +30,39 @@
     <div class="container">
         
     <div class="box">
+        
         <h1 class="title">ServerlessDocs</h1>
-        <h2 class="subtitle">This is a simple DMS application built using AWS Serverless technologies. Go to the document site for more detail <a href="https://app.gitbook.com/@dhaval-b-nagar/s/serverless-docs" target="_blank">https://app.gitbook.com/@dhaval-b-nagar/s/serverless-docs</a></a>.</h2>
+        <h2 class="subtitle">This is a simple DMS application built using AWS Serverless technologies. Go to the document site for more detail <a href="https://dhavaln.gitbook.io/serverless-docs/" target="_blank">https://dhavaln.gitbook.io/serverless-docs/</a></a>.</h2>
         <hr>
 
+        <form autocomplete="off">
         <div class="field">
             <div class="control">
-            <input id="emailInput" type="text" class="input" placeholder="Email" style="display:none"/>
+            <input id="emailInput" autocomplete="nope" type="email" class="input" placeholder="Email" style="display:none"/>
             </div>
         </div>
 
         <div class="field">
             <div class="control">
-                <input id="userNameInput" class="input" type="text" placeholder="Username"/>
+                <input id="userNameInput" autocomplete="nope" class="input" type="text" placeholder="Username"/>
             </div>
         </div>
 
         <div class="field">
             <div class="control">
-        <input id="passwordInput" class="input" type="password" placeholder="Password"/>
+        <input id="passwordInput" autocomplete="nope" class="input" type="password" placeholder="Password"/>
             </div>
         </div>
 
         <div class="field">
             <div class="control">
-                <input id="confirmPasswordInput" class="input" type="password" placeholder="Confirm Password" style="display:none"/>
+                <input id="confirmPasswordInput" autocomplete="nope" class="input" type="password" placeholder="Confirm Password" style="display:none"/>
             </div>
         </div>
 
         <div class="field">
             <div class="control">
-                <input id="verificationCodeInput" type="text" class="input" placeholder="Verification Code" style="display:none"/>
+                <input id="verificationCodeInput" autocomplete="nope" type="text" class="input" placeholder="Verification Code" style="display:none"/>
             </div>
         </div>
 
@@ -85,6 +87,7 @@
             </label>
         </div>
         <input id="clearLogsButton" class="button" type="button" value="Clear Logs" onclick="clearLogs()" style="float: right;">
+        </form>
     </div>
     </div>
     

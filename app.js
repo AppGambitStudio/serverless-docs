@@ -217,7 +217,7 @@ function forgotPassword() {
     document.getElementById('passwordInput').placeholder = 'New Password'
 
     if( !$('#userNameInput').val() || !$('#passwordInput').val() ) {
-        logMessage('Please fill all the fields!', 'red');
+        logMessage('Please fill all the value!', 'red');
     }else{
         $("#loader").show();
         AWS.config.region = region;
@@ -227,9 +227,7 @@ function forgotPassword() {
         });
         
         AWS.config.credentials.clearCachedId();
-        AWS.config.credentials.refresh((err) => {
-            if(err) logMessage(err, 'red')
-        })
+        AWS.config.credentials.refresh((err) => {})
 
         var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
         var param = {
@@ -256,7 +254,7 @@ function forgotPassword() {
 function confirmForgotPassword() {
     // switchToForgotPasswordCodeView()
     if( !$('#userNameInput').val() || !$('#passwordInput').val() || !$('#verificationCodeInput').val()) {
-        logMessage('Please fill all the fields!', 'red');
+        logMessage('Please fill all the values!', 'red');
     }else{
         $("#loader").show();
         AWS.config.region = region;
@@ -294,17 +292,16 @@ function confirmForgotPassword() {
 function verifyCode(){
     // clearLogs();
     if( !$('#verificationCodeInput').val()) {
-        logMessage('Please enter verification field!', 'red');
+        logMessage('Please enter the verification code!', 'red');
     }else{
         $("#loader").show();
         cognitoUser.confirmRegistration($('#verificationCodeInput').val(), true, function(err, result) {
             if (err) {
                 logMessage(err.message, 'red');
             }else{
-                logMessage('Successfully verified code!', 'blue');
+                logMessage('Verification completed!', 'blue');
                 switchToLogInView();
-            }
-            
+            }            
             $("#loader").hide();
         });
     }
@@ -319,6 +316,7 @@ function directVerification(){
     }else{
         $("#loader").show();
         AWS.config.region = region;
+        debugger;
 
         AWS.config.credentials = new AWS.CognitoIdentityCredentials({
             IdentityPoolId: identityPoolId,
@@ -326,7 +324,6 @@ function directVerification(){
         
         AWS.config.credentials.clearCachedId();
         AWS.config.credentials.refresh((err) => {
-            if(err) logMessage(err, 'red')
         })
 
         var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
@@ -339,7 +336,7 @@ function directVerification(){
             if (err) {
                 logMessage(err.message, 'red');
             }else{
-                logMessage('Successfully verified code!', 'blue');
+                logMessage('Verification completed!', 'blue');
                 switchToLogInView();
             }
             
@@ -361,7 +358,6 @@ function resendConfirmationCode(){
         
         AWS.config.credentials.clearCachedId();
         AWS.config.credentials.refresh((err) => {
-            if(err) logMessage(err, 'red')
         })
 
         var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
@@ -373,7 +369,7 @@ function resendConfirmationCode(){
             if (err) {
                 logMessage(err.message, 'red');
             }else{
-                logMessage('Successfully sent code!', 'blue');
+                logMessage('Please enter the verification code sent to your Email.', 'blue');
             }
             
             $("#loader").hide();
