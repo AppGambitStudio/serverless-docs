@@ -10,7 +10,7 @@
     <script src="./libs/aws-cognito-sdk.min.js"></script>
     <script src="./libs/amazon-cognito-identity.min.js"></script>
     <link href="./css/fontawesome.css" rel="stylesheet">
-
+    <script src="./app-config.js"></script>
     <style>
     .loader {
         border: 16px solid #f3f3f3; /* Light grey */
@@ -66,6 +66,10 @@
 
         <input id="logInButton" class="button is-primary" type="Button" value="Log In" onclick="logIn()">            
         <input id="registerButton" class="button is-primary" type="button" value="Register" onclick="register()">
+        <input id="reVerifyButton" class="button is-primary" type="button" value="Verify" onclick="directVerification()">
+        <input id="forgot-password" class="button is-primary" type="button" value="Forgot Password" onclick="forgotPassword()">
+        <input id="changePassword" class="button is-primary" type="button" value="Change Password" onclick="confirmForgotPassword()" style="display:none">
+        <input id="reSendConfirmCodeButton" class="button is-primary" type="button" value="New Confirmation Code" onclick="resendConfirmationCode()" style="display:none">
         <input id="logOutButton" class="button is-danger" type="Button" value="Log Out" onclick="logOut()" style="display:none">
         <input id="verifyCodeButton" class="button is-primary" type="button" value="Verify" onclick="verifyCode()" style="display:none">
         <input id="listPublicFiles" class="button" type="button" value="List Public Files" onclick="listPublicFiles()" style="display:none">
