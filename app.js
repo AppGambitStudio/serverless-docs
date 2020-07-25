@@ -220,13 +220,13 @@ Starting point for AWS List S3 Objects flow with input validation
 function listPublicFiles(){
     // clearLogs();    
     $("#loader").show();
-    logMessage('Listing Public Files', 'blue')
+    logMessage('Listing Public Files', 'black')
     listFiles('public-files/', 'public-files', false);    
 }
 
 function listMyFiles(){
     // clearLogs();    
-    logMessage('Listing My Own Files', 'blue')
+    logMessage('Listing My Own Files', 'black')
     $("#loader").show();
     listFiles(`users/${getUserId()}/`, 'my-files', true);
 }
@@ -252,11 +252,10 @@ function getCognitoIdentityCredentials(){
             logMessage(err.message, 'red');
         }
         else {
-            logMessage('AWS Access Key: '+ AWS.config.credentials.accessKeyId);
-            logMessage('AWS Secret Key: '+ AWS.config.credentials.secretAccessKey);
-            logMessage('AWS Session Token: '+ AWS.config.credentials.sessionToken);
+            logMessage('AWS Access Key and Secret Key available', 'blue');
+            // logMessage('AWS Secret Key: '+ AWS.config.credentials.secretAccessKey);
+            // logMessage('AWS Session Token: '+ AWS.config.credentials.sessionToken);
         }
-
         $("#loader").hide();
     });
 }
@@ -282,7 +281,7 @@ function listFiles(folder, id, hasDelete){
     s3.listObjects(params, function(err, data) {
         if (err) logMessage(err.message, 'red');
         else{
-            logMessage(`${data.Contents.length} File(s) Found`, 'blue');
+            logMessage(`${data.Contents.length} File(s) Found`, 'black');
             const table = $(`#${id}`);
             table.show();
             table.find('tbody').html("");
