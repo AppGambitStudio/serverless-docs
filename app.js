@@ -3,7 +3,7 @@ const userPoolId = '';
 const clientId = '';
 const region = '';
 const identityPoolId = '';
-const S3DocBucket = "";
+const S3DocBucket = '';
 //==============================
 
 
@@ -17,6 +17,42 @@ var poolData = {
 };
 
 getCurrentLoggedInSession();
+
+function switchToReVerificationCodeView(){
+    $("#emailInput").hide();
+    $("#userNameInput").show();
+    $("#passwordInput").hide();
+    $("#confirmPasswordInput").hide();
+    $("#logInButton").hide();
+    $("#registerButton").hide();
+    $("#bucketNameInput").hide();
+    $("#verificationCodeInput").show();
+    $("#reVerifyButton").show();
+    $("#reSendConfirmCodeButton").show();
+    $("#listPublicFiles").hide();
+    $("#listMyFiles").hide();
+    $("#logOutButton").hide();
+    $("#file-upload-ctl").hide();
+    $("#forgot-password").hide();
+    $("#changePassword").hide();
+}
+
+function switchToForgotPasswordCodeView(){
+    $("#emailInput").hide();
+    $("#userNameInput").show();
+    $("#passwordInput").show();
+    $("#confirmPasswordInput").hide();
+    $("#logInButton").hide();
+    $("#registerButton").hide();
+    $("#bucketNameInput").hide();
+    $("#verificationCodeInput").hide();
+    $("#reVerifyButton").hide();
+    $("#reSendConfirmCodeButton").hide();
+    $("#listPublicFiles").hide();
+    $("#listMyFiles").hide();
+    $("#logOutButton").hide();
+    $("#file-upload-ctl").hide();
+}
 
 function switchToVerificationCodeView(){
     $("#emailInput").hide();
@@ -32,6 +68,8 @@ function switchToVerificationCodeView(){
     $("#listMyFiles").hide();
     $("#logOutButton").hide();
     $("#file-upload-ctl").hide();
+    $("#forgot-password").hide();
+    $("#changePassword").hide();
 }
 
 function switchToRegisterView(){
@@ -47,6 +85,11 @@ function switchToRegisterView(){
     $("#listMyFiles").hide();
     $("#logOutButton").hide();
     $("#file-upload-ctl").hide();
+    $("#reVerifyButton").hide();
+    $("#reVerifyButton").hide();
+    $("#reSendConfirmCodeButton").hide();
+    $("#forgot-password").hide();
+    $("#changePassword").hide();
 }
 
 function switchToLogInView(){
@@ -66,6 +109,11 @@ function switchToLogInView(){
     $("#file-upload-ctl").hide();
     $("#public-files").hide().find('tbody').html("");
     $("#my-files").hide().find('tbody').html("");
+    $("#reVerifyButton").show();
+    $("#reSendConfirmCodeButton").hide();
+    $("#forgot-password").show();
+    $("#changePassword").hide();
+
 }
 
 function switchToLoggedInView(){
@@ -81,6 +129,10 @@ function switchToLoggedInView(){
     $("#listMyFiles").show();
     $("#logOutButton").show();
     $("#file-upload-ctl").css('display', 'inline-block');
+    $("#reVerifyButton").hide();
+    $("#reSendConfirmCodeButton").hide();
+    $("#forgot-password").hide();
+    $("#changePassword").hide();
 }
 
 function clearLogs(){
@@ -157,12 +209,89 @@ function register(){
     }
 }
 
-/*
-Starting point for user verification using AWS Cognito with input validation
-*/
+//Initiate forgot password request with cognito-identity-service-provider
+function forgotPassword() {
+    switchToForgotPasswordCodeView()
+    document.getElementById('passwordInput').placeholder = 'New Password'
+
+    if( !$('#userNameInput').val() || !$('#passwordInput').val() ) {
+        logMessage('Please fill all the fields!', 'red');
+    }else{
+        $("#loader").show();
+        AWS.config.region = region;
+
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: identityPoolId,
+        });
+        
+        AWS.config.credentials.clearCachedId();
+        AWS.config.credentials.refresh((err) => {
+            if(err) logMessage(err, 'red')
+        })
+
+        var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
+        var param = {
+            ClientId: clientId,
+            Username: $('#userNameInput').val() 
+        }
+        cidp.forgotPassword(param, function(err, result) {
+            if (err) {
+                logMessage(err.message, 'red');
+            }else{
+                logMessage('Enter Verification code to change password, email with verification code is sent to your emailId.', 'blue');
+                // switchToLogInView();
+                $("#verificationCodeInput").show();
+                $("#forgot-password").hide();
+                $("#changePassword").show();
+            }
+            
+            $("#loader").hide();
+        });
+    }
+}
+
+//confirm forgot password action with cognito-identity-service-provider
+function confirmForgotPassword() {
+    // switchToForgotPasswordCodeView()
+    if( !$('#userNameInput').val() || !$('#passwordInput').val() || !$('#verificationCodeInput').val()) {
+        logMessage('Please fill all the fields!', 'red');
+    }else{
+        $("#loader").show();
+        AWS.config.region = region;
+
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: identityPoolId,
+        });
+        
+        AWS.config.credentials.clearCachedId();
+        AWS.config.credentials.refresh((err) => {
+            if(err) logMessage(err, 'red')
+        })
+
+        var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
+        var param = {
+            ClientId: clientId,
+            Username: $('#userNameInput').val(),
+            Password: $('#passwordInput').val(),
+            ConfirmationCode: $('#verificationCodeInput').val()
+        }
+        cidp.confirmForgotPassword(param, function(err, result) {
+            if (err) {
+                logMessage(err.message, 'red');
+            }else{
+                logMessage('Password changed successfully!', 'blue');
+                switchToLogInView();
+            }
+            
+            $("#loader").hide();
+        });
+    }
+}
+
+
 function verifyCode(){
     // clearLogs();
-    if( !$('#verificationCodeInput').val() ) {
+    if( !$('#verificationCodeInput').val()) {
         logMessage('Please enter verification field!', 'red');
     }else{
         $("#loader").show();
@@ -178,6 +307,78 @@ function verifyCode(){
         });
     }
 }
+
+//seprate verification with cognito-identity-service-provider
+function directVerification(){
+    // clearLogs();
+    switchToReVerificationCodeView()
+    if( !$('#verificationCodeInput' || !$('#userNameInput').val()).val() ) {
+        logMessage('Please fill all the fields!', 'red');
+    }else{
+        $("#loader").show();
+        AWS.config.region = region;
+
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: identityPoolId,
+        });
+        
+        AWS.config.credentials.clearCachedId();
+        AWS.config.credentials.refresh((err) => {
+            if(err) logMessage(err, 'red')
+        })
+
+        var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
+        var param = {
+            ClientId: clientId,
+            ConfirmationCode: $('#verificationCodeInput').val(),
+            Username: $('#userNameInput').val() 
+        }
+        cidp.confirmSignUp(param, function(err, result) {
+            if (err) {
+                logMessage(err.message, 'red');
+            }else{
+                logMessage('Successfully verified code!', 'blue');
+                switchToLogInView();
+            }
+            
+            $("#loader").hide();
+        });
+    }
+}
+
+//function for regenerating signUp verification code using cognito-identity-service-provider
+function resendConfirmationCode(){
+    if( !$('#userNameInput').val() ) {
+        logMessage('Please fill Username field!', 'red');
+    } else {
+        AWS.config.region = region;
+
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: identityPoolId,
+        });
+        
+        AWS.config.credentials.clearCachedId();
+        AWS.config.credentials.refresh((err) => {
+            if(err) logMessage(err, 'red')
+        })
+
+        var cidp = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'})
+        var param = {
+            ClientId: clientId,
+            Username: $('#userNameInput').val() 
+        }
+        cidp.resendConfirmationCode(param, function(err, result) {
+            if (err) {
+                logMessage(err.message, 'red');
+            }else{
+                logMessage('Successfully sent code!', 'blue');
+            }
+            
+            $("#loader").hide();
+        });
+    }
+}
+
 
 /*
 User registration using AWS Cognito
