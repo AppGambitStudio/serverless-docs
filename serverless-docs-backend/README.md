@@ -1,4 +1,4 @@
-# Deployment
+## Deployment
 
 The `config.json.sample` file has all the variables that are required during serverless deployment.
 
