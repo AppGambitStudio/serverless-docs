@@ -32,7 +32,7 @@ Updating Soon
 
 
 # Contributors
-I couldn't do it alone :) and glad that I have AWSome people to help me.
+I couldn't do it alone :) and glad that I worked with AWSome people to help me.
 
 - [Abhishek Desai](https://github.com/AbhishekDesai99)
 - [Rahul Ladumor](https://www.linkedin.com/in/rahulladumor/)
