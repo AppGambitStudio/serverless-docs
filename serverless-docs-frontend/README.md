@@ -2,7 +2,8 @@
 
 - Deploy the backend first.
 - Copy the `app-config.js.sample` file and create a new `app-config.js` file to keep all the front-end configurations.
-```
+
+```javascript
 const userPoolId = ''; 
 const normalClientId = '';
 const region = '';

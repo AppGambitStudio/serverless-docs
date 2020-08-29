@@ -5,7 +5,7 @@ The `config.json.sample` file has all the variables that are required during ser
 - Copy the file content and create a new `config.json` file with updated values before deployment.
 - The sample config file has only one stage `dev` for the development purpose.
 
-```
+```json
 {
   "dev": {
     "region": "us-west-1",
