@@ -1,5 +1,26 @@
-# ServerlessDocs
-ServerlessDocs is a Serverless Document Management System I created to showcase the usage of different AWS Services like Cognito, S3, Lambda, API Gateway, etc. 
+## Deployment
 
-# Docs
-Please refer to the full documentation [here](https://dhaval-b-nagar.gitbook.io/serverless-cognito-s3). 
+- Deploy the backend first.
+- Copy the `app-config.js.sample` file and create a new `app-config.js` file to keep all the front-end configurations.
+```
+const userPoolId = ''; 
+const normalClientId = '';
+const region = '';
+const identityPoolId = '';
+const S3FilesBucket = '';
+//=============== Cognito Group Name ===================
+const adminGroupName = ''
+//===============AWS Cognito Hosted Ui References==================
+const domainName = ''
+const hosteduiClientId = ''
+const loggedInRedirectUrl = ''
+const loggedOutRedirectUrl = ''
+const apiEndpoint = ''
+const oauthPath = ''
+//===============OAuth Cognito Identity ChallengeUrls
+const challengeUrls = {
+    logIn: `${domainName}.auth.${region}.amazoncognito.com/login?client_id=${hosteduiClientId}&response_type=code&scope=openid+aws.cognito.signin.user.admin&redirect_uri=${loggedInRedirectUrl}`,
+    userInfo: `${domainName}.auth.${region}.amazoncognito.com/oauth2/userInfo`,
+    logOut: `${domainName}.auth.${region}.amazoncognito.com/logout?client_id=${hosteduiClientId}&logout_uri=${loggedOutRedirectUrl}`
+}
+```
