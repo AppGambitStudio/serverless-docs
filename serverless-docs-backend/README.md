@@ -36,4 +36,5 @@ The `config.json.sample` file has all the variables that are required during ser
 - Use latest Serverless Framework and deploy using the `sls deploy --stage <stage name>`
 - Once deployed, go to the CloudFormation stage in AWS console and copy the Output Variables.
 - Output variables will be required in the `serverless-docs-frontend/app-config.js` file.
-- Make sure you put proper domain name or email in the `whiteListedDomains` and `whiteListedEmails`, otherwise you will not be able to Signup as a new user.
+
+> Make sure you put proper domain name or email in the `whiteListedDomains` and `whiteListedEmails`, otherwise users will not be able to signup.

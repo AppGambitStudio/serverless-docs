@@ -24,3 +24,8 @@ const challengeUrls = {
     logOut: `${domainName}.auth.${region}.amazoncognito.com/logout?client_id=${hosteduiClientId}&logout_uri=${loggedOutRedirectUrl}`
 }
 ```
+- Use the `npm run deploy` command to deploy (move) the frontend changes to the S3 Website Hosting bucket. Replace the S3 bucket name in `package.json` file.
+
+```
+"deploy": "aws s3 sync . s3://<your web hosting S3 bucket name>"
+```

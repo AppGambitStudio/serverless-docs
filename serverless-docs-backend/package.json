@@ -1,5 +1,5 @@
 {
-  "name": "serverless-docs-yml",
+  "name": "serverless-docs-backend",
   "version": "1.0.0",
   "main": "handler.js",
   "scripts": {
