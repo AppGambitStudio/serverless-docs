@@ -1,0 +1,13 @@
+{
+  "name": "serverless-docs-frontEnd",
+  "version": "1.0.0",
+  "description": "ServerlessDocs is a Serverless Document Management System I created to showcase the usage of different AWS Services like Cognito, S3, Lambda, API Gateway, etc.",
+  "main": "app-config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "aws s3 sync . s3://serverless-docs-dhaval-test-final-dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

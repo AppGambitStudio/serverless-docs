@@ -1,0 +1,40 @@
+Type: AWS::IAM::Role
+Properties:
+  RoleName: !Ref AWS::StackName
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: Allow
+        Principal:
+          Service:
+            - lambda.amazonaws.com
+        Action:
+          - sts:AssumeRole
+  Policies:
+    - PolicyName: !Join ["-", [ "Cloudwatch", { Ref: AWS::StackName }, "LambdaServiceRole", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: logs:*
+            Resource:
+              - !Join ["", [ "arn:aws:logs:", { Ref: "AWS::Region" }, ":", { Ref: "AWS::AccountId" }, ":*"]]
+              
+    - PolicyName: !Join [ "-", [ "PinPoint", { Ref: AWS::StackName }, "LambdaServiceRole", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: mobiletargeting:SendMessages
+            Resource:
+              - !Join [ "", [ "arn:aws:mobiletargeting:", { Ref: "AWS::Region" }, ":", { Ref: "AWS::AccountId" }, ":apps/*"]]
+    
+    - PolicyName: !Join [ "-", [ "Cognito", { Ref: AWS::StackName }, "LambdaServiceRole", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: cognito-idp:*
+            Resource:
+              - '*'
+   

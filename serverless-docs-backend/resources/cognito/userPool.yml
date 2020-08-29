@@ -1,0 +1,28 @@
+Type: AWS::Cognito::UserPool
+Properties:
+  AccountRecoverySetting:
+    RecoveryMechanisms:
+      - Name: 'verified_email'
+        Priority: 2
+  AutoVerifiedAttributes:
+    - email
+  Policies: 
+    PasswordPolicy:
+      MinimumLength: 8
+      RequireLowercase: true
+      RequireNumbers: true
+      RequireSymbols: true
+      RequireUppercase: true
+      TemporaryPasswordValidityDays: 30
+  Schema: 
+    - Name: email
+      Required: true
+      Mutable: false
+  UsernameConfiguration:
+    CaseSensitive: True
+  LambdaConfig:
+    PostConfirmation: !GetAtt PostConfirmationHookLambdaFunction.Arn
+    PreSignUp: !GetAtt PreSignUpHookLambdaFunction.Arn
+  EmailConfiguration:
+    EmailSendingAccount: 'COGNITO_DEFAULT'
+  UserPoolName: ${self:custom.environment.userPoolName}-${opt:stage}

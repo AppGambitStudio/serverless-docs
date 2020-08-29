@@ -1,0 +1,3 @@
+Type: AWS::Pinpoint::App
+Properties: 
+  Name: ${self:custom.environment.pinpointAppName}

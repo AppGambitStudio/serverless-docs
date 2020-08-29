@@ -1,0 +1,22 @@
+//this file is in git ignore
+//you need to create app-config.js, exact similar to this sample file, you can go to cloudformation stack output section to get all values
+const userPoolId = ''; 
+const normalClientId = '';
+const region = '';
+const identityPoolId = '';
+const S3FilesBucket = '';
+//=============== Cognito Group Name ===================
+const adminGroupName = ''
+//===============AWS Cognito Hosted Ui References==================
+const domainName = ''
+const hosteduiClientId = ''
+const loggedInRedirectUrl = ''
+const loggedOutRedirectUrl = ''
+const apiEndpoint = ''
+const oauthPath = ''
+//===============OAuth Cognito Identity ChallengeUrls
+const challengeUrls = {
+    logIn: `${domainName}.auth.${region}.amazoncognito.com/login?client_id=${hosteduiClientId}&response_type=code&scope=openid+aws.cognito.signin.user.admin&redirect_uri=${loggedInRedirectUrl}`,
+    userInfo: `${domainName}.auth.${region}.amazoncognito.com/oauth2/userInfo`,
+    logOut: `${domainName}.auth.${region}.amazoncognito.com/logout?client_id=${hosteduiClientId}&logout_uri=${loggedOutRedirectUrl}`
+}

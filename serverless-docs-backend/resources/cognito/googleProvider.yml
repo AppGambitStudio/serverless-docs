@@ -1,0 +1,11 @@
+Type: AWS::Cognito::UserPoolIdentityProvider
+Properties: 
+  IdpIdentifiers: 
+    - String
+  ProviderDetails: 
+    client_id: ${self:custom.environment.authenticationProviders.googleAppId}
+    client_secret: ${self:custom.environment.authenticationProviders.googleAppSecret}
+    authorize_scopes: ${self:custom.environment.authenticationProviders.googleAuthScopes} 
+  ProviderName: Google
+  ProviderType: Google
+  UserPoolId: !Ref cognitoUserPool

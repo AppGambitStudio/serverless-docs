@@ -1,0 +1,24 @@
+Type: AWS::Cognito::UserPoolClient
+Properties:
+  UserPoolId: !Ref cognitoUserPool
+  AllowedOAuthFlows: 
+    - 'code'
+  AllowedOAuthFlowsUserPoolClient: true
+  AllowedOAuthScopes: 
+    - 'openid'
+    - 'aws.cognito.signin.user.admin'
+  CallbackURLs: 
+    - !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+  ClientName: ${self:custom.environment.hostedWebClient}-${opt:stage}
+  DefaultRedirectURI: !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+  ExplicitAuthFlows: 
+    - 'ALLOW_USER_PASSWORD_AUTH'
+    - 'ALLOW_USER_SRP_AUTH'
+    - 'ALLOW_REFRESH_TOKEN_AUTH'
+  GenerateSecret: true
+  LogoutURLs: 
+    - !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+  PreventUserExistenceErrors: 'ENABLED'
+  SupportedIdentityProviders:
+    - 'COGNITO'
+  RefreshTokenValidity: 3650

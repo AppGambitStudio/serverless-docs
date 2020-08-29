@@ -2,3 +2,5 @@
 **/.DS_Store
 functions/**
 app-config.js
+
+**/node_modules

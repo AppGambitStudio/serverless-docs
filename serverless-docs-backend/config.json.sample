@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "region": "us-west-1",
+    "memorySize": "128",
+    "userPoolName": "serverless-docs-cognito-yml",
+    "normalWebClient": "client1",
+    "hostedWebClient": "client2",
+    "identityPoolName": "serverless_docs_cognito_yml",
+    "authenticationProviders": {
+      "googleAppId": "",
+      "googleAppSecret": "",
+      "googleAuthScopes": "email openid"
+    },
+    "serverlessdocs-website-bucket": "serverless-docs-cognito-yml",
+    "cognito-signin-domain": "serverless-docs-6210",
+    "adminGroupName": "Admin",
+    "pinpointAppName": "serverless-docs-cognito-yml",
+    "emailConfig": {
+      "verifiedEmailAddress": "hello@mycompany.com",
+      "verifiedEmailArn": ""
+    },
+    "whiteListedDomains": "mycompany1.com,mycompany2.com",
+    "whiteListedEmails": "test1@test.com,test2@test.com" 
+  }
+  }
+}

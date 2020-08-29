@@ -1,0 +1,74 @@
+Type: AWS::IAM::Role
+Properties:
+  RoleName: !Join ["",[!Ref AWS::StackName, "IDPAuthRole-AdminUsers"]]
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: Allow
+        Principal:
+          Federated:
+            - cognito-identity.amazonaws.com
+        Action:
+          - sts:AssumeRoleWithWebIdentity
+        Condition:
+          StringEquals:
+            "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
+          "ForAnyValue:StringLike": 
+            "cognito-identity.amazonaws.com:amr": "authenticated"
+  Policies:
+    - PolicyName: !Join ["-", [ "CognitoIDP", { Ref: AWS::StackName }, "Basic-Auth", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 
+              - "mobileanalytics:PutEvents"
+              - "cognito-sync:*"
+              - "cognito-identity:*"
+            Resource:
+              - "*"
+    - PolicyName: !Join ["-", [ "CognitoIDP", { Ref: AWS::StackName }, "S3-Access", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AllowListingPublicFiles"
+            Effect: Allow
+            Action: "s3:ListBucket"
+            Condition:
+              StringLike:
+                "s3:prefix":
+                  - "public-files/*"
+            Resource:
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }]]
+          
+          - Sid: "AllowListingUserFiles"
+            Effect: Allow
+            Action:
+              - "s3:ListBucket"
+            Condition: 
+              StringLike:
+                "s3:prefix":
+                  - !Join ["", [ 'users/', '${cognito-identity.amazonaws.com:sub', '}/*']] 
+                  # - 'users/${cognito-identity.amazonaws.com:sub}/*'
+            Resource:
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }]]
+          
+          - Sid: "AllowReadWriteAccessPublicFolder"
+            Effect: Allow
+            Action:
+              - "s3:GetObject"
+              - "s3:PutObject"
+              - "s3:DeleteObject" 
+            Resource:
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }, '/public-files']]
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }, '/public-files/*']]
+          
+          - Sid: "ReadWriteDeleteOwnFiles"
+            Effect: Allow
+            Action:
+              - "s3:GetObject"
+              - "s3:PutObject"
+              - "s3:DeleteObject" 
+            Resource:
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }, '/users/', '${cognito-identity.amazonaws.com:sub', '}']]
+              - !Join ["", [ "arn:aws:s3:::", { Ref: s3FileBucket }, '/users/', '${cognito-identity.amazonaws.com:sub', '}/*']]

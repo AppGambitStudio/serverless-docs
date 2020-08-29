@@ -1,0 +1,6 @@
+Type: AWS::Cognito::UserPoolGroup
+Properties: 
+  GroupName: ${self:custom.environment.adminGroupName}
+  Precedence: 0
+  RoleArn: { "Fn::GetAtt": ["adminUsersAuthRole", "Arn"] }
+  UserPoolId: !Ref cognitoUserPool

@@ -1,0 +1,29 @@
+Type: AWS::IAM::Role
+Properties:
+  RoleName: !Join ["",[!Ref AWS::StackName, "MFA-Caller-ARN"]]
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: Allow
+        Principal:
+          Federated:
+            - cognito-identity.amazonaws.com
+        Action:
+          - sts:AssumeRole
+        Condition:
+          "StringEquals":
+            "sts:ExternalId": !Ref IdentityPool
+          "ForAnyValue:StringLike": 
+            "cognito-identity.amazonaws.com:amr": "authenticated"
+  Policies:
+    - PolicyName: !Join ["-", [ "CognitoIDP", { Ref: AWS::StackName }, "Basic-Auth", "Policy"]]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 
+              - "mobileanalytics:PutEvents"
+              - "cognito-sync:*"
+              - "cognito-identity:*"
+            Resource:
+              - "*"

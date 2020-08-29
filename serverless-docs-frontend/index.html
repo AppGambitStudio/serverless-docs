@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ServerlessDoc - A demo application using AWS Serverless Services</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="./css/fontawesome.css" rel="stylesheet">
+
+    <!-- <meta name="google-signin-client_id"
+        content="XXXXXXXXXXXX.apps.googleusercontent.com"> -->
+
+</head>
+
+<body onload="checkUserSession()">
+    <script src="./app-config.js"></script>
+    <div class="container">
+        <div id="header">
+            <nav class="level">
+                <div class="level-left" id="home-view-title" style="display: none">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="title" onclick="switchToLoggedInView()" style="cursor: pointer;"> ServerlessDocs
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                        <div class="level-item">
+                            <div class="buttons has-addons is-right">
+                                <div class="dropdown">
+                                    <div class="dropdown-trigger">
+                                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                                            <span id="userNameBox">Login with</span>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                                        <div class="dropdown-content">
+                                            <div id="dropdown-content-login-form" style="display: none">
+                                                <div id="hostedUiButton" class="dropdown-item" onclick="launchHostedUI()"
+                                                    style="width: 100%; display: flex; cursor:pointer">
+                                                    
+                                                    <span style="font-size: 20px; color: orange; display: inline-block; vertical-align: top; width: 20%"><i class="fab fa-aws"></i></span>&nbsp;
+                                                    <span style="font-size: 15px; display: inline-block; vertical-align: top; width: 80%">
+                                                        Sign in with Cognito
+                                                    </span>
+                                                </div>
+                                                <hr class="dropdown-divider">
+                                                <div id="googleButton" class="g-signin2" data-onsuccess="onSignIn">
+                                                </div>
+                                            </div>
+                                            <div id="dropdown-constent-home-view" style="display: none">
+                                                <a id="enableLogsButton" class="dropdown-item" onclick="logHandler()">
+                                                    Enable Logs
+                                                </a>
+                                                <a id="clearLogsButton" class="dropdown-item" onclick="clearLogs()"
+                                                    style="display: none;"> Clear Logs
+                                                </a>
+                                                <a id="updatePasswordDivHandler" class="dropdown-item"
+                                                    onclick="showUpdatePasswordDiv()" style="display: block;"> Update
+                                                    Password
+                                                </a>
+                                                <hr class="dropdown-divider">
+                                                <a id="logOutButton" class="dropdown-item text-danger"
+                                                    style="color: #e60000;" onclick="logOut()">
+                                                    Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div id="login-form" class="login-outer">
+            <div class="login-title-logo">
+                <div class="level-item m-b-10">
+                    <div class="title" style="text-transform:uppercase; cursor: pointer;" onclick="switchToLogInView()">
+                        ServerlessDocs</div>
+                </div>
+            </div>
+            <form autocomplete="off">
+                <div class="login-section">
+                    <div class="field">
+                        <div class="control">
+                            <input id="emailInput" autocomplete="nope" type="email" class="input" placeholder="Email"
+                                style="display:none" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <input id="userNameInput" autocomplete="nope" class="input" type="text"
+                                placeholder="Username" style="display:none;"/>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <input id="passwordInput" autocomplete="nope" class="input" type="password"
+                                placeholder="Password" style="display:none" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <input id="confirmPasswordInput" autocomplete="nope" class="input" type="password"
+                                placeholder="Confirm Password" style="display:none" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <input id="verificationCodeInput" autocomplete="nope" type="text" class="input"
+                                placeholder="Verification Code" style="display:none" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input id="codeInput" class="input" type="number" placeholder="Confirmation Code"
+                                style="display: none;" />
+                        </div>
+                    </div>
+                    <div class="forgot-section is-pulled-right">
+                        <a id="forgot-password" onclick="switchToForgotPasswordCodeView()" style="display:none">Forgot
+                            Password</a>
+                    </div>
+                    <div class="login-btn-section">
+                        <input id="logInButton" class="button is-primary m-r-5" type="Button" value="Log In" onclick="logIn()"
+                            style="display:none">
+                        <input id="registerMFA" class="button is-primary m-r-5" type="Button" value="Register MFA"
+                            style="display: none;" onclick="verifyTotp('MFA_SETUP')">
+                        <input id="verifyMFA" class="button is-primary m-r-5" type="Button" value="Verify MFA"
+                            style="display: none;" onclick="verifyTotp()">
+                        <input id="registerButton" class="button is-primary m-r-5" type="button" value="Register"
+                            onclick="register()" style="display:none">
+                        <input id="verifyCodeButton" class="button is-primary m-r-5" type="button" value="Verify"
+                            onclick="confirmSignUp()" style="display:none">
+                        <input id="reSendConfirmCodeButton" class="button is-primary m-r-5" type="button"
+                            value="New Confirmation Code" onclick="resendConfirmationCode()" style="display:none">
+                        <!-- <input id="hostedUiButton" class="button is-primary" type="button"
+                            value="Sign in with Cognito" onclick="launchHostedUI()" style="display: none;"> -->
+                        <input id="forgotPasswordButton" class="button is-primary m-r-5" type="button" value="Forgot Password"
+                            onclick="forgotPassword()" style="display:none">
+                        <input id="changePassword" class="button is-primary m-r-5" type="button" value="Change Password"
+                            onclick="confirmForgotPassword()" style="display:none">
+                        <!-- <div id="googleButton" class="button g-signin2" data-onsuccess="onSignIn" style="display: none;"> -->
+                        <input id="loginback" class="button is-primary m-r-5" type="Button" value="Log In"
+                            onclick="switchToLogInView(true)" style="display:none">
+                    </div><br>
+
+                    
+                    <div id="logDiv-login" class="notification" style="display:block;" onclick="">
+                        <div id="loader" class="loader" style="display:none"></div>
+                        
+                        <div id="log-login" class="custom-border"
+                            style="height:auto; word-wrap: break-word;padding: 10px;"></div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <div id="homeView">
+            <div id="updatePasswordDiv" style="display:none" class="update-password">
+                <div id="loader-updatePassword" class="loader" style="display:none;margin-bottom:25px"></div>
+                <div id="logDiv-updatePassword" class="notification" style="display:none;" onclick="">
+                    <div id="log-updatePassword" class="custom-border"
+                        style="height:auto; word-wrap: break-word;padding: 10px;"></div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input id="currentPassword" class="input" type="password" placeholder="Current Password"
+                            style="display:block" />
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input id="newPassword" class="input" type="password" placeholder="New Password"
+                            style="display:block" />
+                    </div>
+                </div>
+                <div class="update-btn-section">
+                    <input id="updatePasswordButton" class="button is-primary" type="button" value="Update Password"
+                        onclick="changeUserPassword()" style="display:block;margin-right: 10px;">
+                    <input id="cancelUpdatePassword" type="button" class="button is-dark" value="Cancel" onclick="switchToLoggedInView()">
+                </div>
+            </div>
+            <div class="container" id="public-files" style="display: none; padding-top: 10px;">
+                <nav class="panel m-t-10">
+                    <p class="panel-heading">
+                        <i class="fa fa-users"></i>
+                        Shared Files
+                    <div class="right-btn-group is-pulled-right">
+                        <div id="loader-public-file" class="loader" style="display:none; margin: auto; margin-right: 20px;"></div>
+                        <button class="button is-small is-pulled-right is-dark_" onclick="window.listPublicFiles()">
+                            <span class="icon is-small" data-tooltip="Refresh">
+                                <i class="fa fa-sync-alt" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                        <div class="file is-small m-l-5" data-tooltip="Upload file" style="display: none"
+                            id="public-file-upload-ctl">
+                            <label class="file-label">
+                                <input class="file-input" type="file" id="public-file-upload" onchange="uploadFile(false)">
+                                <span class="file-cta" style="background-color: white;">
+                                    <span class="file-label">
+                                        <i class="fas fa-upload" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+    
+                    </p>
+    
+                </nav>
+        
+                <div class="table-container">
+                    <table id="public-files-table" class="table is-fullwidth is-hoverable is-striped">
+                        <thead>
+                            <tr>
+                                <th width="50%">File</th>
+                                <th width="10%">Size</th>
+                                <th>Last Modified</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        
+            <div class="container" id="my-files" style="display: none; padding-top: 10px;">
+                <nav class="panel m-t-10">
+                    <p class="panel-heading">
+                        <i class="fa fa-file"></i>
+                        My Files
+                    <div class="right-btn-group is-pulled-right">
+                        <div id="loader-my-file" class="loader" style="display:none; margin: auto; margin-right: 20px;"></div>
+                        <button class="button is-small is-dark_" onclick="window.listMyFiles()">
+                            <span class="icon is-small" data-tooltip="Refresh">
+                                <i class="fa fa-sync-alt" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                        <div class="file is-small m-l-5" data-tooltip="Upload file" style="display: none"
+                            id="file-upload-ctl">
+                            <label class="file-label">
+                                <input class="file-input" type="file" id="file-upload" onchange="uploadFile()">
+                                <span class="file-cta" style="background-color: white;">
+                                    <span class="file-label">
+                                        <i class="fas fa-upload" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+    
+                    </p>
+                </nav>
+    
+                <div class="table-container">
+                    <table id="my-files-table" class="table is-fullwidth is-hoverable is-striped">
+                        <thead>
+                            <tr>
+                                <th width="50%">File</th>
+                                <th width="10%">Size</th>
+                                <th>Last Modified</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+        <div class="container">
+            <div id="loader-home" class="loader" style="display:none"></div>
+            <div id="logDiv" class="notification" style="display:none;">
+                <div id="log" class="custom-border"
+                    style="overflow-y: scroll; height:300px; word-wrap: break-word;padding-right: 10px;"></div>
+            </div>
+        </div>
+    
+        <div class="container" style="text-align: center; padding-top: 50px; font-size: 0.9em;">
+            <div>Made with <span class="cloud"> ☁️ &nbsp;</span>and AWS Serverless services</div>
+            <div><a href="https://dhavaln.gitbook.io/serverless-docs/"
+                    target="_blank">https://dhavaln.gitbook.io/serverless-docs/</a></div>
+        </div>
+        </div>
+    </div>
+    <script src="./cognito-app.js"></script>
+    <script src="./ui-app.js"></script>
+    <script src="./util.js"></script>
+    <script src="./s3-app.js"></script>
+    <script src="./common-app.js"></script>
+    <script src="./libs/jquery.min.js"></script>
+    <script src="./libs/aws-sdk-2.487.0.min.js"></script>
+    <script src="./libs/aws-cognito-sdk.min.js"></script>
+    <script src="./libs/amazon-cognito-identity.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</body>
+
+</html>

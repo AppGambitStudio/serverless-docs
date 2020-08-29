@@ -1,0 +1,11 @@
+Type: AWS::Cognito::IdentityPool
+Properties: 
+  AllowUnauthenticatedIdentities: true
+  CognitoIdentityProviders: 
+    - ClientId: !Ref cognitoAppClient1
+      ProviderName: !Join  ['', ['cognito-idp.', {Ref: "AWS::Region"}, '.amazonaws.com/', !Ref cognitoUserPool ]]
+    - ClientId: !Ref cognitoAppClient2
+      ProviderName: !Join  ['', ['cognito-idp.', {Ref: "AWS::Region"}, '.amazonaws.com/', !Ref cognitoUserPool ]]
+  IdentityPoolName: ${self:custom.environment.identityPoolName}_${opt:stage}
+  # SupportedLoginProviders:
+  #   'accounts.google.com': ${self:custom.environment.authenticationProviders.googleAppId}

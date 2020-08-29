@@ -1,0 +1,6 @@
+Type: AWS::Lambda::Permission
+Properties:
+  Action: lambda:InvokeFunction
+  FunctionName: !GetAtt PreSignUpHookLambdaFunction.Arn
+  Principal: cognito-idp.amazonaws.com
+  SourceArn: !GetAtt cognitoUserPool.Arn

@@ -1,0 +1,16 @@
+Type: AWS::Cognito::IdentityPoolRoleAttachment
+Properties: 
+  IdentityPoolId: !Ref IdentityPool
+  RoleMappings:
+    cognitoProvider:
+      IdentityProvider: !Join [ "", ["cognito-idp.", !Ref AWS::Region, ".amazonaws.com/", !Ref cognitoUserPool, ":", !Ref cognitoAppClient1] ]
+      Type: Token
+      AmbiguousRoleResolution: AuthenticatedRole
+    cognitoProvider2:
+      IdentityProvider: !Join [ "", ["cognito-idp.", !Ref AWS::Region, ".amazonaws.com/", !Ref cognitoUserPool, ":", !Ref cognitoAppClient2] ]
+      Type: Token
+      AmbiguousRoleResolution: AuthenticatedRole
+  Roles:
+    "unauthenticated": !GetAtt unAuthRole.Arn
+    "authenticated": !GetAtt authRole.Arn
+  

@@ -1,0 +1,24 @@
+Type: AWS::Cognito::UserPoolClient
+Properties:
+  UserPoolId: !Ref cognitoUserPool
+  AllowedOAuthFlows: 
+    - 'implicit'
+  AllowedOAuthFlowsUserPoolClient: true
+  AllowedOAuthScopes: 
+    - 'openid'
+    - 'aws.cognito.signin.user.admin'
+  CallbackURLs: 
+    - 'http://localhost:8080/'
+  ClientName: ${self:custom.environment.normalWebClient}-${opt:stage}
+  DefaultRedirectURI: 'http://localhost:8080/'
+  ExplicitAuthFlows: 
+    - 'ALLOW_USER_PASSWORD_AUTH'
+    - 'ALLOW_USER_SRP_AUTH'
+    - 'ALLOW_REFRESH_TOKEN_AUTH'
+  GenerateSecret: false
+  LogoutURLs: 
+    - 'http://localhost:8080/'
+  PreventUserExistenceErrors: 'ENABLED'
+  SupportedIdentityProviders:
+    - 'COGNITO'
+  RefreshTokenValidity: 3650

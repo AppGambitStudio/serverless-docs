@@ -1,0 +1,157 @@
+service: serverless-docs-backend
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${self:custom.environment.region}
+  memorySize: ${self:custom.environment.memorySize}
+  stage: ${opt:stage}
+  
+functions:
+  tokenEndpoint:
+    handler: functions/token-endpoint.handler
+    role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
+    events:
+      - http:
+          path: /cognito-token-endpoint
+          method: get
+    environment:
+      domainName: ${self:custom.environment.cognito-signin-domain}
+      clientId: !Ref cognitoAppClient2
+      userPoolId: !Ref cognitoUserPool
+      redirectUrl: !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+      region: !Ref AWS::Region
+      
+  postConfirmationHook:
+    handler: functions/post-confirmation-hook.handler
+    role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
+    environment:
+      EMAIL: ${self:custom.environment.emailConfig.verifiedEmailAddress}
+      
+  preSignUpHook:
+    handler: functions/check-whitelist-domain.handler
+    role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
+    environment:
+      WHITE_LISTED_DOMAINS: ${self:custom.environment.whiteListedDomains}
+      WHITE_LISTED_EMAIL: ${self:custom.environment.whiteListedEmails}
+
+custom:
+  environment: ${file(./config.json):${opt:stage}}
+  accountId: ${self:custom.environment.accountId}
+
+resources:
+  Resources:
+    #main execution service role
+    LambdaServiceRole:
+      ${file(./resources/iam/stackServiceRole.yml)}
+
+    
+    #Cognito User pool resources - userPool, appClient1, appClient2, domain, group, googleIdentity
+    
+    cognitoUserPool: #UserPool 
+      ${file(./resources/cognito/userPool.yml)}
+    
+    cognitoAppClient1: #cognito Client1 without secret
+      ${file(./resources/cognito/appClient1.yml)}
+
+    cognitoAppClient2: #UserPoolClient2 - with secret
+      ${file(./resources/cognito/appClient2.yml)}
+
+    cognitoUserPoolDomain: #UserPoolDomain to enable hosted ui
+      ${file(./resources/cognito/userPoolDomain.yml)}
+
+    cognitoUserPoolGroup: #UserPool Group for Admin users, with extra permission role
+      ${file(./resources/cognito/adminGroup.yml)}
+    
+    # Optional for Google Sign-in
+    # googleIdentityProvider: #set up Google Identity provider for userPool
+    #   ${file(./resources/cognito/googleProvider.yml)}
+
+    
+    
+    #Cognito Identity pool resources - 
+    
+    IdentityPool: #identity pool
+      ${file(./resources/cognito/identityPool.yml)}
+
+    authRole: #Auth Role IdentityPool for Authenticated users
+      ${file(./resources/iam/authRole.yml)}
+
+    unAuthRole: #UnAuth role for unauthenticated users
+      ${file(./resources/iam/unAuthRole.yml)}
+
+    adminUsersAuthRole: #Admin group role with extra access of uploading public files
+       ${file(./resources/iam/adminUsersAuthRole.yml)}
+    
+    identityPoolRoleMapper: #identity pool role mapper
+      ${file(./resources/cognito/roleMapper.yml)}
+
+    
+    
+    #s3 resources with policies and cors configuration
+    
+    s3FileBucket: #file bucket to store public and user files 
+      ${file(./resources/s3/fileBucket.yml)}
+
+    s3DeploymentBucket: #front end deployment bucket
+      ${file(./resources/s3/deploymentBucket.yml)}
+
+    s3DeploymentBucketPolicy: #public policy for read and get access 
+      ${file(./resources/s3/deploymentBucketPolicy.yml)}
+
+    
+    
+    #Pinpoint resorces - Application, emailChannel
+    
+    pinpointApp: #pinpoint App
+      ${file(./resources/pinpoint/pinpointApp.yml)}
+
+    pinpointEmailChannel: #pinpoint Application Email Channel
+      ${file(./resources/pinpoint/emailChannel.yml)}
+
+     
+    invokeLambdaTriggerPermissionPostConfirmation: #lambda trigger invoke permission for cognito
+      ${file(./resources/iam/lambdaInvoke.yml)}
+
+    invokeLambdaTriggerPermissionPreSignUp: #lambda trigger invoke permission for cognito
+      ${file(./resources/iam/preSignUpLambdaInvoke.yml)}
+
+  Outputs:
+    userPoolId:
+      Description: The user pool id
+      Value: !Ref cognitoUserPool
+    normalClientId:
+      Description: The user pool client1 id, client without secret
+      Value: !Ref cognitoAppClient1
+    hosteduiClientId:
+      Description: The user pool client2 id, client2 - hostedUi -client with secret
+      Value: !Ref cognitoAppClient2
+    identityPoolId:
+        Description: The identity pool id
+        Value: !Ref IdentityPool
+    adminGroupName:
+        Description: The user pool group name for admin users
+        Value: !Ref cognitoUserPoolGroup
+    S3FilesBucket:
+      Description: The name of the file bucket for shared and private data
+      Value: !Ref s3FileBucket
+    s3WebsiteBucket:
+      Description: The name of the bucket which will host front end
+      Value: !Ref s3DeploymentBucket
+    domainName:
+      Description: The name of the HostedUiDomain
+      Value: !Join ["",["https://", !Ref cognitoUserPoolDomain]]
+    loggedInRedirectUrl:
+      Description: The ridrect url to add in cognito hosted client
+      Value: !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+    loggedOutRedirectUrl:
+      Description: The ridrect url to add in cognito hosted client
+      Value: !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
+    apiEndpoint:
+      Description: The Api Gateway endpoint, which is used for code-token exchange
+      Value: !Join ["", ["https://", !Ref ApiGatewayRestApi, ".execute-api." , !Ref AWS::Region,  ".amazonaws.com/${opt:stage}"]]
+    oauthPath:
+      Description: Http Path of code token exchange endpoint
+      Value: 'cognito-token-endpoint'
+    
+    

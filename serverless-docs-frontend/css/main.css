@@ -1,0 +1,480 @@
+/* tool tip*/
+[data-tooltip] {
+  position: relative;
+  z-index: 10;
+}
+
+/* Positioning and visibility settings of the tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  left: 50%;
+  bottom: calc(100% + 5px);
+  pointer-events: none;
+  transition: 0.2s;
+  will-change: transform;
+}
+
+/* The actual tooltip with a dynamic width */
+[data-tooltip]:before {
+  content: attr(data-tooltip);
+  padding: 10px 18px;
+  min-width: 50px;
+  max-width: 300px;
+  width: max-content;
+  width: -moz-max-content;
+  border-radius: 6px;
+  font-size: 14px;
+  /*   font-size: 0.73rem; */
+  background-color: rgba(59, 72, 80, 0.9);
+  background-image: linear-gradient(
+    30deg,
+    rgba(59, 72, 80, 0.44),
+    rgba(59, 68, 75, 0.44),
+    rgba(60, 82, 88, 0.44)
+  );
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  text-align: center;
+  white-space: pre-wrap;
+  transform: translate(-50%, -5px) scale(0.5);
+}
+
+/* Tooltip arrow */
+[data-tooltip]:after {
+  content: "";
+  border-style: solid;
+  border-width: 5px 5px 0px 5px;
+  border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
+  transition-duration: 0s;
+  /* If the mouse leaves the element, 
+                        the transition effects for the 
+                        tooltip arrow are "turned off" */
+  transform-origin: top;
+  /* Orientation setting for the
+                        slide-down effect */
+  transform: translateX(-50%) scaleY(0);
+}
+
+/* Tooltip becomes visible at hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Scales from 0.5 to 1 -> grow effect */
+[data-tooltip]:hover:before {
+  transition-delay: 0.3s;
+  transform: translate(-50%, -5px) scale(1);
+}
+
+/* Slide down effect only on mouseenter (NOT on mouseleave) */
+[data-tooltip]:hover:after {
+  transition-delay: 0.5s;
+  /* Starting after the grow effect */
+  transition-duration: 0.2s;
+  transform: translateX(-50%) scaleY(1);
+}
+
+/*
+That's it.
+*/
+/*
+If you want some adjustability
+here are some orientation settings you can use:
+*/
+/* LEFT */
+/* Tooltip + arrow */
+[data-tooltip-location="left"]:before,
+[data-tooltip-location="left"]:after {
+  left: auto;
+  right: calc(100% + 5px);
+  bottom: 50%;
+}
+
+/* Tooltip */
+[data-tooltip-location="left"]:before {
+  transform: translate(-5px, 50%) scale(0.5);
+}
+
+[data-tooltip-location="left"]:hover:before {
+  transform: translate(-5px, 50%) scale(1);
+}
+
+/* Arrow */
+[data-tooltip-location="left"]:after {
+  border-width: 5px 0px 5px 5px;
+  border-color: transparent transparent transparent rgba(55, 64, 70, 0.9);
+  transform-origin: left;
+  transform: translateY(50%) scaleX(0);
+}
+
+[data-tooltip-location="left"]:hover:after {
+  transform: translateY(50%) scaleX(1);
+}
+
+/* RIGHT */
+[data-tooltip-location="right"]:before,
+[data-tooltip-location="right"]:after {
+  left: calc(100% + 5px);
+  bottom: 50%;
+}
+
+[data-tooltip-location="right"]:before {
+  transform: translate(5px, 50%) scale(0.5);
+}
+
+[data-tooltip-location="right"]:hover:before {
+  transform: translate(5px, 50%) scale(1);
+}
+
+[data-tooltip-location="right"]:after {
+  border-width: 5px 5px 5px 0px;
+  border-color: transparent rgba(55, 64, 70, 0.9) transparent transparent;
+  transform-origin: right;
+  transform: translateY(50%) scaleX(0);
+}
+
+[data-tooltip-location="right"]:hover:after {
+  transform: translateY(50%) scaleX(1);
+}
+
+/* BOTTOM */
+[data-tooltip-location="bottom"]:before,
+[data-tooltip-location="bottom"]:after {
+  top: calc(100% + 5px);
+  bottom: auto;
+}
+
+[data-tooltip-location="bottom"]:before {
+  transform: translate(-50%, 5px) scale(0.5);
+}
+
+[data-tooltip-location="bottom"]:hover:before {
+  transform: translate(-50%, 5px) scale(1);
+}
+
+[data-tooltip-location="bottom"]:after {
+  border-width: 0px 5px 5px 5px;
+  border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
+  transform-origin: bottom;
+}
+
+/* tooltip complete*/
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 35%;
+  bottom: 30px;
+  margin: auto;
+  right: 35%;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible;
+  /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  /* Light grey */
+  border-top: 16px solid #3498db;
+  /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.m-t-10 {
+  margin-top: 10px;
+}
+
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+.m-r-5 {
+  margin-right: 5px;
+}
+
+.m-l-5 {
+    margin-left: 5px;
+}
+
+.panel:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.icon {
+  font-size: 1rem !important;
+}
+
+.file-cta {
+  border-radius: 0px !important;
+  border-color: none !important;
+}
+.text-right-pad-right {
+  text-align: right !important;
+  padding-right: 20px !important;
+}
+.container {
+  flex-grow: 1;
+  width: 100%;
+  padding-top: 20px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.columns {
+  margin: 0;
+}
+
+.columns input {
+  margin-right: 10px;
+}
+
+.abcRioButton {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.abcRioButtonContentWrapper {
+  height: 100%;
+  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.abcRioButtonIcon {
+  padding: 0px !important;
+}
+
+.abcRioButtonContents {
+  font-size: 1rem !important;
+  line-height: 0 !important;
+}
+
+.panel {
+  box-shadow: 0 0.1em 0.2em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 0px rgba(10, 10, 10, 0.02) !important;
+}
+
+.right-btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 2.1rem;
+  top: 2rem;
+}
+
+.file-cta,
+.file-name {
+  border-color: #dbdbdb;
+  border-radius: 4px;
+  font-size: 1em;
+  padding-left: 9px;
+  padding-right: 9px;
+  white-space: nowrap;
+}
+
+.forgot-section {
+  height: 30px;
+  width: 100%;
+  text-align: right;
+  font-weight: 500;
+}
+
+.login-btn-section {
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.login-outer {
+  width: 42%;
+  margin: auto;
+  margin-top: 15%;
+  margin-bottom: 15%;
+}
+
+.update-password {
+  width: 30%;
+  margin: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.update-btn-section {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.notification {
+  padding: 1rem !important;
+}
+
+/* custom border*/
+.custom-border::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+.custom-border::-webkit-scrollbar {
+  width: 5px;
+  background-color: #f5f5f5;
+}
+
+.custom-border::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border: 2px solid #797979;
+}
+
+@media (min-width: 320px) and (max-width: 360px) {
+  .table tbody {
+    background-color: transparent;
+    font-size: 13px !important;
+  }
+
+  .login-outer {
+    width: 95% !important;
+    margin: auto;
+    margin-top: 25%;
+    margin-bottom: 25%;
+  }
+
+  .update-password {
+    width: 90% !important;
+    margin: auto;
+    margin-top: 15%;
+    margin-bottom: 15%;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+  .m-b-5 {
+    border-radius: 2px;
+    font-size: 0.75rem;
+    margin-bottom: 5px !important;
+  }
+
+  #log {
+    font-size: 13px;
+  }
+
+  .login-outer {
+    width: 95% !important;
+    margin: auto;
+    margin-top: 25%;
+    margin-bottom: 25%;
+  }
+
+  .update-password {
+    width: 90% !important;
+    margin: auto;
+    margin-top: 15%;
+    margin-bottom: 15%;
+  }
+
+  #snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    /* background-color: #333;
+          color: #fff; */
+    background-color: white;
+    color: black;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 5%;
+    bottom: 30px;
+    margin: auto;
+    right: 5%;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
