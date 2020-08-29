@@ -6,6 +6,14 @@ var userPool;
 var currentSession = JSON.parse(sessionStorage.getItem('currentSession')) || new Object()
 var xmlHttp = new XMLHttpRequest();
 
+var cidp;
+
+function getCognitoIdentityServiceProvider(){
+    if(cidp === undefined)
+        cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
+    return cidp;
+}
+
 //Functions related with cognito-identity and cognito-idp
 //all the functions on this file, use cognito-identity-service-provider.
 //congnito identity js is removed
@@ -27,8 +35,6 @@ function checkUserSession(){
         }
     });
 }
-
-
 
 //registration related functions
 //render register view
@@ -63,8 +69,7 @@ async function registerUser(email, username, password) {
         Value: email
     });
 
-    var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
-    return cidp.signUp({
+    return getCognitoIdentityServiceProvider().signUp({
         ClientId: normalClientId,
         Password: password,
         Username: username,
@@ -96,9 +101,8 @@ function confirmSignUp() {
         logMessage('Please fill all the fields!', 'rgb(255 0 0 / 1)', true);
     } else {
         handleElements(['loader'],true)
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
         let { verificationCodeInputValue, userNameInputValue } = fetchTextBoxValues(['verificationCodeInput', 'userNameInput'])
-        return cidp.confirmSignUp({
+        return getCognitoIdentityServiceProvider().confirmSignUp({
             ClientId: normalClientId,
             ConfirmationCode: verificationCodeInputValue,
             Username: userNameInputValue
@@ -128,9 +132,8 @@ function resendConfirmationCode() {
         logMessage('Please fill Username field!', 'rgb(255 0 0 / 1)', true);
     } else {
         handleElements(['loader'],true)
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
         let { userNameInputValue } = fetchTextBoxValues(['userNameInput'])
-        return cidp.resendConfirmationCode({
+        return getCognitoIdentityServiceProvider().resendConfirmationCode({
             ClientId: normalClientId,
             Username: userNameInputValue
         })
@@ -157,8 +160,7 @@ function forgotPassword() {
     } else {
         handleElements(['loader'],true)
         let { userNameInputValue } = fetchTextBoxValues(['userNameInput'])
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
-        return cidp.forgotPassword({
+        return getCognitoIdentityServiceProvider().forgotPassword({
             ClientId: normalClientId,
             Username: userNameInputValue
         })
@@ -186,9 +188,8 @@ function confirmForgotPassword() {
         logMessage('Please fill all the values!', 'rgb(255 0 0 / 1)', true);
     } else {
         handleElements(['loader'],true)
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
         let { userNameInputValue, passwordInputValue, verificationCodeInputValue } = fetchTextBoxValues(['userNameInput', 'passwordInput', 'verificationCodeInput'])
-        return cidp.confirmForgotPassword({
+        return getCognitoIdentityServiceProvider().confirmForgotPassword({
             ClientId: normalClientId,
             Username: userNameInputValue,
             Password: passwordInputValue,
@@ -219,8 +220,7 @@ async function logIn() {
         logMessage('Please enter Username and Password!', 'rgb(255 0 0 / 1)', true);
     } else {
         handleElements(['loader'], true)
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
-        return cidp.initiateAuth({
+        return getCognitoIdentityServiceProvider().initiateAuth({
             AuthFlow: 'USER_PASSWORD_AUTH',
             ClientId: normalClientId,
             AuthParameters: {
@@ -257,8 +257,7 @@ async function logIn() {
 
 //generate secretCode and Session for registering authenticator service with cognito user pools
 function generateSecretMFA(Session) {
-    var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
-    return cidp.associateSoftwareToken({
+    return getCognitoIdentityServiceProvider().associateSoftwareToken({
         Session
     })
     .promise()
@@ -284,9 +283,8 @@ function verifyTotp(challengeType) {
     if (checkEmptyTextBoxes(['codeInput'], false) === false) {
         logMessage('Please fill value first!', 'rgb(255 0 0 / 1)', true)
     } else {
-        var cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
         if (challengeType === 'MFA_SETUP') {
-            return cidp.verifySoftwareToken({
+            return getCognitoIdentityServiceProvider().verifySoftwareToken({
                 Session: session,
                 UserCode: codeInput.value
             })
@@ -304,7 +302,7 @@ function verifyTotp(challengeType) {
                 handleElements(['loader'],false)
             })
         } else {
-            return cidp.respondToAuthChallenge({
+            return getCognitoIdentityServiceProvider().respondToAuthChallenge({
                 ChallengeName: "SOFTWARE_TOKEN_MFA",
                 ChallengeResponses: {
                     SOFTWARE_TOKEN_MFA_CODE: $('#codeInput').val(),
@@ -500,11 +498,7 @@ async function changeUserPassword() {
         logUpdatePassword.innerHTML = `<span style="color:red"></span>`
         getCognitoIdentityCredentials()
         .then(() => {
-            var cidp = new AWS.CognitoIdentityServiceProvider({
-                apiVersion: '2016-04-18',
-            });
-
-            return cidp.changePassword({
+            return getCognitoIdentityServiceProvider().changePassword({
                 AccessToken: accessToken, 
                 PreviousPassword: currentPassword.value,
                 ProposedPassword: newPassword.value 
@@ -620,10 +614,7 @@ function launchHostedUI() {
       validateSession()
       getCognitoIdentityCredentials()
       .then(() => {
-        var cidp = new AWS.CognitoIdentityServiceProvider({
-          apiVersion: '2016-04-18',
-        });
-        cidp.getUser({ AccessToken: currentSession.AccessToken })
+        getCognitoIdentityServiceProvider().getUser({ AccessToken: currentSession.AccessToken })
           .promise()
           .then(d => {
             if (!d.UserMFASettingList) {

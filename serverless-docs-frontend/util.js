@@ -17,8 +17,6 @@ window.bytesToSize = (bytes) => {
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
 
-
-
 var dropdown = document.querySelector('.dropdown');
 dropdown.addEventListener('click', function (event) {
     event.stopPropagation();

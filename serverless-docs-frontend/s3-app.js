@@ -61,7 +61,6 @@ function deleteFile(file){
     });
 }
 
-
 function shareFile(file){
     console.log('file', file)
     var s3 = new AWS.S3();
