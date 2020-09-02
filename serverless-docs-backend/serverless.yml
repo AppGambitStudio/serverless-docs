@@ -27,7 +27,7 @@ functions:
     role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
     environment:
       EMAIL: ${self:custom.environment.emailConfig.verifiedEmailAddress}
-      
+      PINPOINT_APPID: !Ref pinpointApp
   preSignUpHook:
     handler: functions/check-whitelist-domain.handler
     role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
