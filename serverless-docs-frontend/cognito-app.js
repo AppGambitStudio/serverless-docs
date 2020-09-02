@@ -460,7 +460,7 @@ function logOut() {
         });
     }
     currentSession = new Object()
-    handleElementsProperty('userNameBox', 'innerText', 'Login with')
+    handleElementsText('userNameBox', 'Login with')
     switchToLogInView()
 }
 
@@ -689,6 +689,7 @@ function onSignIn(googleUser) {
     
     getCognitoIdentityCredentials()
     .then(() => {
+        checkUserGroup()
         checkLoginProvider()
         showUserName()
         listPublicFiles()

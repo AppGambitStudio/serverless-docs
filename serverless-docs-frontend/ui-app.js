@@ -395,23 +395,27 @@ const showUpdatePasswordDiv = () => {
 const fetchTextBoxValues = (textBoxes) => {
     let values = new Object()
     textBoxes.map(textBox => {
-      values[`${textBox}Value`] = $(`#${textBox}`).val()
+        values[`${textBox}Value`] = $(`#${textBox}`).val()
     })
     return values
-  }
-  
-  const handleElements = (elements, state) => {
+}
+
+const handleElements = (elements, state) => {
     elements.map(e => {
-      state ? $(`#${e}`).show() : $(`#${e}`).hide();
+        state ? $(`#${e}`).show() : $(`#${e}`).hide();
     })
-  }
-  
-  const handleElementsProperty = (element, propertyType, propertyValue) => {
+}
+
+const handleElementsProperty = (element, propertyType, propertyValue) => {
     $(`#${element}`).attr(propertyType, propertyValue)
-  }
-  
-  const clearElements = (elements) => {
-    elements.map(e=>{
-      $(`#${e}`).empty()
+}
+
+const handleElementsText = (element, textValue) => {
+    $(`#${element}`).text(textValue)
+}
+
+const clearElements = (elements) => {
+    elements.map(e => {
+        $(`#${e}`).empty()
     })
-  }
+}
