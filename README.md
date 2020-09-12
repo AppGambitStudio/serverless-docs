@@ -1,10 +1,10 @@
-# ServerlessDocs
+## ServerlessDocs
 ServerlessDocs is a Serverless Document Management System I created to showcase the usage of different AWS Services like Cognito, S3, Lambda, API Gateway, etc. 
 
-# Docs
+## Docs
 [Still work in progress] Please refer to the full documentation [here](https://dhaval-b-nagar.gitbook.io/serverless-cognito-s3). 
 
-# AWS Services used
+## AWS Services used
 - Amazon Cognito (User Pool and Identity Pool)
 - AWS Lambda (For Cognito Hooks)
 - Amazon S3 (To Host the Frontend and Store Files)
@@ -12,12 +12,10 @@ ServerlessDocs is a Serverless Document Management System I created to showcase 
 - AWS API Gateway (For Google Sign-In Tokens)
 - AWS IAM (Roles, Permissions, etc)
 
-# Caveats
-- Front-end needs to be manually pushed with `npm run deploy` command. Reminder, front-end is still a vanilla JS.
-- MFA is by enabled by default, will ask to configure after the first login.
-- Google Sign-In is optional and by default disabled. Will provide more detail in the docs.
-- Some UI glitches :) as expected.
-- Documentation is still not complete and some work is in progress.
+## Caveats
+- MFA is by enabled by default, required to configure after the first login.
+- Google Sign-In is optional and by default disabled, will share more detail in the docs.
+- Documentation is still work in progress.
 
 # Deployment 
 The app currently has two deployment setups, 1) Serverless Framework and 2) SAM. The serverless framework is already pushed in the repo and SAM will be pushed soon.
