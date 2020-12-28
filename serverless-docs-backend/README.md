@@ -1,6 +1,10 @@
 ## Deployment
 
-The `config.json.sample` file has all the variables that are required during serverless deployment.
+###
+Note: Make sure you deploy only in the regions where Pinpoint is supported. 
+https://aws.amazon.com/about-aws/whats-new/2019/01/amazon-pinpoint-is-now-available-in-three-additional-regions/
+
+The `config.json.sample` file has all the variables that are required during serverless deployment. 
 
 - Copy the file content and create a new `config.json` file with updated values before deployment.
 - The sample config file has only one stage `dev` for the development purpose.
@@ -32,6 +36,9 @@ The `config.json.sample` file has all the variables that are required during ser
   }  
 }
 ```
+
+###
+Note: `verifiedEmailAddress` and `verifiedEmailArn` are both mandatory. Please verify an email address before deploying the backend.
 
 - Use latest Serverless Framework and deploy using the `sls deploy --stage <stage name>`
 - Once deployed, go to the CloudFormation stage in AWS console and copy the Output Variables.
