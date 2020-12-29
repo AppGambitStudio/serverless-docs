@@ -8,16 +8,16 @@ Properties:
     - 'openid'
     - 'aws.cognito.signin.user.admin'
   CallbackURLs: 
-    - 'http://localhost:8080/'
+    - !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
   ClientName: ${self:custom.environment.normalWebClient}-${opt:stage}
-  DefaultRedirectURI: 'http://localhost:8080/'
+  DefaultRedirectURI: !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
   ExplicitAuthFlows: 
     - 'ALLOW_USER_PASSWORD_AUTH'
     - 'ALLOW_USER_SRP_AUTH'
     - 'ALLOW_REFRESH_TOKEN_AUTH'
   GenerateSecret: false
   LogoutURLs: 
-    - 'http://localhost:8080/'
+    - !Join ["", ["https://", !Ref s3DeploymentBucket, ".s3.", !Ref AWS::Region, ".amazonaws.com/index.html"]]
   PreventUserExistenceErrors: 'ENABLED'
   SupportedIdentityProviders:
     - 'COGNITO'

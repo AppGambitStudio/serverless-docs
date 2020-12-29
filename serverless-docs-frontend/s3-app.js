@@ -103,12 +103,14 @@ async function uploadFile(privateFile = true){
         var files = fetchFileControlValues("public-file-upload");
         var file = files[0];
         var fileName = file.name;    
-        var fileKey = `public-files/${fileName}`;    
+        var fileKey = `public-files/${fileName}`;
+        handleElements(['loader-public-file'], true)
     } else {
         var files = fetchFileControlValues("file-upload");
         var file = files[0];
         var fileName = file.name;    
         var fileKey = `users/${await getUserId()}/${fileName}`;
+        handleElements(['loader-my-file'], true)
     }
     if (!files.length) {
         return alert("Please choose a file to upload first.");
@@ -125,7 +127,7 @@ async function uploadFile(privateFile = true){
     upload.promise()
     .then((data) => {
         logMessage(`Successfully uploaded file.`, "blue");
-        privateFile ? listMyFiles() : listPublicFiles();           
+        privateFile ? listMyFiles() : listPublicFiles();
     },(err) => {
         logMessage(`There was an error uploading your file: ${err.message}`, "rgb(255 0 0 / 1)");
     });
