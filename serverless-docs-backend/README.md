@@ -1,4 +1,4 @@
-## Deployment
+## Prepare for Deployment
 
 ###
 Note: Make sure you deploy only in the regions where Pinpoint is supported. 
@@ -45,3 +45,26 @@ Note: `verifiedEmailAddress` and `verifiedEmailArn` are both mandatory. Please v
 - Output variables will be required in the `serverless-docs-frontend/app-config.js` file.
 
 > Make sure you put proper domain name or email in the `whiteListedDomains` and `whiteListedEmails`, otherwise users will not be able to signup.
+
+The application is deployed using the latest Serverless Framework version.
+
+```
+$ serverless --version
+Framework Core: 2.16.1
+Plugin: 4.3.0
+SDK: 2.3.2
+Components: 3.4.3
+```
+
+## Deploy
+Once the configuration file is ready, use the `serverless deploy` command to deploy the application.
+
+```
+serverless deploy --stage dev --region us-west-2 --verbose
+```
+
+## Configure Frontend
+If the deployment is successful, the command prompt will show the bunch of variables and their values. These values are required to configure in the `serverless-docs-frontend/app-config.js` file.
+
+
+
