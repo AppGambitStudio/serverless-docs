@@ -1,5 +1,7 @@
 service: serverless-docs-backend
 
+frameworkVersion: '2'
+  
 provider:
   name: aws
   runtime: nodejs12.x

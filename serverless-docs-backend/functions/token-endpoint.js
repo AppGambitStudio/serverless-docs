@@ -1,6 +1,6 @@
 //===============Node Modules=============================
 const cognitoClient = require('aws-sdk/clients/cognitoidentityserviceprovider')
-const cidp = new cognitoClient() 
+const cidp = new cognitoClient()
 const qs = require('querystring')
 const axios = require('axios').default
 //=========================================================
@@ -19,8 +19,8 @@ const grant_type = ['authorization_code', 'refresh_token']
 
 const getClientSecret = async (ClientId, UserPoolId) => {
     var params = {
-      ClientId, 
-      UserPoolId
+        ClientId,
+        UserPoolId
     };
     return cidp.describeUserPoolClient(params).promise();
 }
@@ -28,13 +28,13 @@ const getClientSecret = async (ClientId, UserPoolId) => {
 exports.handler = async (event) => {
     let body
     console.log('invoked', event.queryStringParameters)
-    if(event.queryStringParameters.authType === 'code') {
+    if (event.queryStringParameters.authType === 'code') {
         body = {
             grant_type: grant_type[0],
             clientId: clientId,
             code: event.queryStringParameters.authCode,
             redirect_uri: loggedInRedirectUrl
-        }    
+        }
     } else {
         body = {
             grant_type: grant_type[1],
@@ -42,8 +42,8 @@ exports.handler = async (event) => {
             refresh_token: event.queryStringParameters.refresh_token
         }
     }
-    
-    
+
+
     let response
     try {
 
@@ -51,7 +51,7 @@ exports.handler = async (event) => {
             console.log(JSON.stringify(success))
             let options = {
                 method: 'POST',
-                headers: { "Content-Type":'application/x-www-form-urlencoded', "Authorization":`Basic ${Buffer.from(`${clientId}:${success.UserPoolClient.ClientSecret}`).toString('base64')}`},
+                headers: { "Content-Type": 'application/x-www-form-urlencoded', "Authorization": `Basic ${Buffer.from(`${clientId}:${success.UserPoolClient.ClientSecret}`).toString('base64')}` },
                 data: qs.stringify(body),
                 url: `https://${domainName}.auth.${region}.amazoncognito.com/oauth2/token`
             }
@@ -66,9 +66,9 @@ exports.handler = async (event) => {
             };
             return response
         })
-        
-    
-    } catch(e) {
+
+
+    } catch (e) {
         console.log(JSON.stringify(e.response.data))
         response = {
             statusCode: 400,
