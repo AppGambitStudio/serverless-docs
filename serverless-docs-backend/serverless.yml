@@ -30,6 +30,7 @@ functions:
     environment:
       EMAIL: ${self:custom.environment.emailConfig.verifiedEmailAddress}
       PINPOINT_APPID: !Ref pinpointApp
+      ADMIN_GROUP: ${self:custom.environment.adminGroupName}
 
   preSignUpHook:
     handler: functions/check-whitelist-domain.handler

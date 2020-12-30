@@ -1,11 +1,8 @@
-//===============Node Modules=============================
 const cognitoClient = require('aws-sdk/clients/cognitoidentityserviceprovider')
 const cidp = new cognitoClient()
 const qs = require('querystring')
 const axios = require('axios').default
-//=========================================================
 
-//===============AWS Cognito Hosted Ui References==================
 const domainName = process.env.domainName
 const loggedInRedirectUrl = process.env.redirectUrl
 const loggedOutRedirectUrl = process.env.redirectUrl
@@ -15,7 +12,6 @@ const region = process.env.region;
 const UserPoolId = process.env.userPoolId
 // const clientSecret = process.env.clientSecret
 const grant_type = ['authorization_code', 'refresh_token']
-//=================================================================
 
 const getClientSecret = async (ClientId, UserPoolId) => {
     var params = {
@@ -26,8 +22,9 @@ const getClientSecret = async (ClientId, UserPoolId) => {
 }
 
 exports.handler = async (event) => {
-    let body
-    console.log('invoked', event.queryStringParameters)
+    console.log(event);
+    
+    let body;
     if (event.queryStringParameters.authType === 'code') {
         body = {
             grant_type: grant_type[0],
@@ -42,7 +39,6 @@ exports.handler = async (event) => {
             refresh_token: event.queryStringParameters.refresh_token
         }
     }
-
 
     let response
     try {

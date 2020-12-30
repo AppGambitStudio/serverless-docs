@@ -1,7 +1,9 @@
 const pinpointClient = require('aws-sdk/clients/pinpoint');
 const cognitoClient = require('aws-sdk/clients/cognitoidentityserviceprovider')
+
 const pinpoint = new pinpointClient();
 const cidp = new cognitoClient()
+
 let appId = process.env.PINPOINT_APPID;
 let from = process.env.EMAIL;
 let subject = 'ServerlessDocs - New User Signup';
@@ -19,17 +21,17 @@ function setUserPoolMFA(userPoolId) {
   return cidp.setUserPoolMfaConfig(params).promise();
 }
 
-const setUserMfa = (userPoolId, username) => {
-  var params = {
-    UserPoolId: userPoolId,
-    Username: username,
-    SoftwareTokenMfaSettings: {
-      Enabled: true,
-      PreferredMfa: true
-    }
-  };
-  return cidp.adminSetUserMFAPreference(params).promise();
-}
+// const setUserMfa = (userPoolId, username) => {
+//   var params = {
+//     UserPoolId: userPoolId,
+//     Username: username,
+//     SoftwareTokenMfaSettings: {
+//       Enabled: true,
+//       PreferredMfa: true
+//     }
+//   };
+//   return cidp.adminSetUserMFAPreference(params).promise();
+// }
 
 const generateEmailParam = (appId, from, to, subject, text) => {
   return {
@@ -58,28 +60,21 @@ const generateEmailParam = (appId, from, to, subject, text) => {
 
 
 exports.handler = async (event) => {
-  console.log(JSON.stringify(event))
+  console.log(event);
 
-  // await setUserMfa(event.userPoolId, event.userName)
   await setUserPoolMFA(event.userPoolId)
 
   var params = {
-    GroupName: 'Admin',
+    GroupName: process.env.ADMIN_GROUP,
     UserPoolId: event.userPoolId,
   };
 
   let emails = await cidp.listUsersInGroup(params).promise();
   temp = emails.Users.map(x => (x.Attributes.filter(y => y.Name === 'email'))[0].Value);  
 
-  try {
-    await Promise.all(temp.map(async e => {
-      const emailParams = await generateEmailParam(appId, from, e, subject, text.replace('{{email}}', event.request.userAttributes.email));
-      let st = await pinpoint.sendMessages(emailParams).promise();
-      console.log('message result', st.MessageResponse.Result);
-    }));
-    return event;
-  } catch (e) {
-    console.log(e);
-    return event;
-  }
+  await Promise.all(temp.map(async e => {
+    const emailParams = await generateEmailParam(appId, from, e, subject, text.replace('{{email}}', event.request.userAttributes.email));
+    let st = await pinpoint.sendMessages(emailParams).promise();    
+  }));
+  return event;
 };
