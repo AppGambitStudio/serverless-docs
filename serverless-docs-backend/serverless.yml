@@ -29,7 +29,8 @@ functions:
     role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
     environment:
       EMAIL: ${self:custom.environment.emailConfig.verifiedEmailAddress}
-      
+      PINPOINT_APPID: !Ref pinpointApp
+
   preSignUpHook:
     handler: functions/check-whitelist-domain.handler
     role: { "Fn::GetAtt": ["LambdaServiceRole", "Arn"] }
@@ -46,7 +47,6 @@ resources:
     #main execution service role
     LambdaServiceRole:
       ${file(./resources/iam/stackServiceRole.yml)}
-
     
     #Cognito User pool resources - userPool, appClient1, appClient2, domain, group, googleIdentity
     
@@ -68,8 +68,6 @@ resources:
     # Optional for Google Sign-in
     # googleIdentityProvider: #set up Google Identity provider for userPool
     #   ${file(./resources/cognito/googleProvider.yml)}
-
-    
     
     #Cognito Identity pool resources - 
     
@@ -87,8 +85,6 @@ resources:
     
     identityPoolRoleMapper: #identity pool role mapper
       ${file(./resources/cognito/roleMapper.yml)}
-
-    
     
     #s3 resources with policies and cors configuration
     
@@ -100,8 +96,6 @@ resources:
 
     s3DeploymentBucketPolicy: #public policy for read and get access 
       ${file(./resources/s3/deploymentBucketPolicy.yml)}
-
-    
     
     #Pinpoint resorces - Application, emailChannel
     
@@ -110,7 +104,6 @@ resources:
 
     pinpointEmailChannel: #pinpoint Application Email Channel
       ${file(./resources/pinpoint/emailChannel.yml)}
-
      
     invokeLambdaTriggerPermissionPostConfirmation: #lambda trigger invoke permission for cognito
       ${file(./resources/iam/lambdaInvoke.yml)}
@@ -155,5 +148,7 @@ resources:
     oauthPath:
       Description: Http Path of code token exchange endpoint
       Value: 'cognito-token-endpoint'
-    
+    pinpointId:
+      Description: Pinpoint Project Id
+      Value: !Ref pinpointApp
     

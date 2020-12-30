@@ -20,6 +20,7 @@ function getCognitoIdentityServiceProvider(){
 
 //check User session when page loads
 function checkUserSession(){
+    debugger;
     getCurrentLoggedInSession()
     .then((res) => {
         if(res.status){

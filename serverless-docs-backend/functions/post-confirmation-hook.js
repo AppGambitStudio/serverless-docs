@@ -4,8 +4,8 @@ const pinpoint = new pinpointClient();
 const cidp = new cognitoClient()
 let appId = process.env.PINPOINT_APPID;
 let from = process.env.EMAIL;
-let subject = 'Notification';
-let text = 'new user is registered';
+let subject = 'ServerlessDocs - New User Signup';
+let text = `{{email}} has completed the signup.`;
 let temp = [];
 
 function setUserPoolMFA(userPoolId) {
@@ -69,20 +69,17 @@ exports.handler = async (event) => {
   };
 
   let emails = await cidp.listUsersInGroup(params).promise();
-  temp = emails.Users.map(x => (x.Attributes.filter(y => y.Name === 'email'))[0].Value);
-  console.log('temp', temp);
+  temp = emails.Users.map(x => (x.Attributes.filter(y => y.Name === 'email'))[0].Value);  
 
   try {
-
     await Promise.all(temp.map(async e => {
-      const emailParams = await generateEmailParam(appId, from, e, subject, text);
+      const emailParams = await generateEmailParam(appId, from, e, subject, text.replace('{{email}}', event.request.userAttributes.email));
       let st = await pinpoint.sendMessages(emailParams).promise();
       console.log('message result', st.MessageResponse.Result);
     }));
-
     return event;
-
   } catch (e) {
+    console.log(e);
     return event;
   }
 };
