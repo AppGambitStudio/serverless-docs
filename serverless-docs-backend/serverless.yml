@@ -17,6 +17,7 @@ functions:
       - http:
           path: /cognito-token-endpoint
           method: get
+          cors: true
     environment:
       domainName: ${self:custom.environment.cognito-signin-domain}
       clientId: !Ref cognitoAppClient2
