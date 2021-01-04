@@ -8,8 +8,8 @@ var xmlHttp = new XMLHttpRequest();
 
 var cidp;
 
-function getCognitoIdentityServiceProvider(){
-    if(cidp === undefined)
+function getCognitoIdentityServiceProvider() {
+    if (cidp === undefined)
         cidp = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
     return cidp;
 }
@@ -19,28 +19,28 @@ function getCognitoIdentityServiceProvider(){
 //congnito identity js is removed
 
 //check User session when page loads
-function checkUserSession(){
+function checkUserSession() {
     debugger;
     getCurrentLoggedInSession()
-    .then((res) => {
-        if(res.status){
-            switchToLoggedInView();
-            showUserName()
-            checkUserGroup()
-            listPublicFiles();
-            listMyFiles();
-            checkLoginProvider()
-        }else{
-            switchToLogInView();
-            getAccessSecretKeys();
-        }
-    });
+        .then((res) => {
+            if (res.status) {
+                switchToLoggedInView();
+                showUserName()
+                checkUserGroup()
+                listPublicFiles();
+                listMyFiles();
+                checkLoginProvider()
+            } else {
+                switchToLogInView();
+                getAccessSecretKeys();
+            }
+        });
 }
 
 //registration related functions
 //render register view
 function register() {
-    if((checkEmptyTextBoxes(['emailInput', 'confirmPasswordInput']) === false) && (!checkEmptyTextBoxes(['userNameInput', 'passwordInput'], false)) === false) {
+    if ((checkEmptyTextBoxes(['emailInput', 'confirmPasswordInput']) === false) && (!checkEmptyTextBoxes(['userNameInput', 'passwordInput'], false)) === false) {
         emptyTextBoxes(registerViewTextBoxes)
     }
     switchToRegisterView();
@@ -76,18 +76,18 @@ async function registerUser(email, username, password) {
         Username: username,
         UserAttributes: attributeList
     })
-    .promise()
-    .then(res => {
-        switchToVerificationCodeView(true)
-        logMessage('Verification code is sent to your given email, confirm your account with code!', 'blue', true)
-    })
-    .catch(err => {
-        emptyTextBoxes([confirmPasswordInput, passwordInput])
-        logMessage(err.message, 'red', true)
-    })
-    .finally(() => {
-        handleElements(['loader'],false)
-    })
+        .promise()
+        .then(res => {
+            switchToVerificationCodeView(true)
+            logMessage('Verification code is sent to your given email, confirm your account with code!', 'blue', true)
+        })
+        .catch(err => {
+            emptyTextBoxes([confirmPasswordInput, passwordInput])
+            logMessage(err.message, 'red', true)
+        })
+        .finally(() => {
+            handleElements(['loader'], false)
+        })
 }
 
 
@@ -101,28 +101,28 @@ function confirmSignUp() {
     if (checkEmptyTextBoxes(['verificationCodeInput', 'userNameInput'], false) === false) {
         logMessage('Please fill all the fields!', 'rgb(255 0 0 / 1)', true);
     } else {
-        handleElements(['loader'],true)
+        handleElements(['loader'], true)
         let { verificationCodeInputValue, userNameInputValue } = fetchTextBoxValues(['verificationCodeInput', 'userNameInput'])
         return getCognitoIdentityServiceProvider().confirmSignUp({
             ClientId: normalClientId,
             ConfirmationCode: verificationCodeInputValue,
             Username: userNameInputValue
         })
-        .promise()
-        .then(() => {
-            emptyTextBoxes([...verificationViewTextBoxes, ...registerViewTextBoxes])
-            switchToLogInView()
-            logMessage('Verification completed!', 'blue', true)
-            
-        })
-        .catch(err => {
-            emptyTextBoxes([verificationCodeInput])
-            logMessage(err.message, 'red', true)
-            verificationCodeInput.focus()
-        })
-        .finally(() => {
-            handleElements(['loader'],false)
-        })
+            .promise()
+            .then(() => {
+                emptyTextBoxes([...verificationViewTextBoxes, ...registerViewTextBoxes])
+                switchToLogInView()
+                logMessage('Verification completed!', 'blue', true)
+
+            })
+            .catch(err => {
+                emptyTextBoxes([verificationCodeInput])
+                logMessage(err.message, 'red', true)
+                verificationCodeInput.focus()
+            })
+            .finally(() => {
+                handleElements(['loader'], false)
+            })
     }
 }
 
@@ -132,22 +132,22 @@ function resendConfirmationCode() {
     if (checkEmptyTextBoxes(['userNameInput'], false) === false) {
         logMessage('Please fill Username field!', 'rgb(255 0 0 / 1)', true);
     } else {
-        handleElements(['loader'],true)
+        handleElements(['loader'], true)
         let { userNameInputValue } = fetchTextBoxValues(['userNameInput'])
         return getCognitoIdentityServiceProvider().resendConfirmationCode({
             ClientId: normalClientId,
             Username: userNameInputValue
         })
-        .promise()
-        .then(() => {
-            logMessage('New Verification code is sent to your email address!', 'blue', true)
-        })
-        .catch(err => {
-            logMessage(err.message, 'red', true)
-        })
-        .finally(() => {
-            handleElements(['loader'],false)
-        })
+            .promise()
+            .then(() => {
+                logMessage('New Verification code is sent to your email address!', 'blue', true)
+            })
+            .catch(err => {
+                logMessage(err.message, 'red', true)
+            })
+            .finally(() => {
+                handleElements(['loader'], false)
+            })
     }
 }
 
@@ -159,26 +159,26 @@ function forgotPassword() {
     if (checkEmptyTextBoxes(['userNameInput'], false) === false) {
         logMessage('Please fill username value!', 'rgb(255 0 0 / 1)', true);
     } else {
-        handleElements(['loader'],true)
+        handleElements(['loader'], true)
         let { userNameInputValue } = fetchTextBoxValues(['userNameInput'])
         return getCognitoIdentityServiceProvider().forgotPassword({
             ClientId: normalClientId,
             Username: userNameInputValue
         })
-        .promise()
-        .then(() => {
-            logMessage('Enter Verification code to change password, email with verification code is sent to your email address.', 'blue', true);
-            handleElements(['userNameInput', 'forgot-password', 'forgotPasswordButton'], false)
-            handleElements(['verificationCodeInput', 'passwordInput', 'changePassword'], true)
-            handleElementsProperty('passwordInput', 'placeholder', 'New Passowrd')
-        })
-        .catch(err => {
-            logMessage(err.message, 'red', true)
-            switchToForgotPasswordCodeView()
-        })
-        .finally(() => {
-            handleElements(['loader'],false)
-        })
+            .promise()
+            .then(() => {
+                logMessage('Enter Verification code to change password, email with verification code is sent to your email address.', 'blue', true);
+                handleElements(['userNameInput', 'forgot-password', 'forgotPasswordButton'], false)
+                handleElements(['verificationCodeInput', 'passwordInput', 'changePassword'], true)
+                handleElementsProperty('passwordInput', 'placeholder', 'New Passowrd')
+            })
+            .catch(err => {
+                logMessage(err.message, 'red', true)
+                switchToForgotPasswordCodeView()
+            })
+            .finally(() => {
+                handleElements(['loader'], false)
+            })
     }
 }
 
@@ -188,7 +188,7 @@ function confirmForgotPassword() {
     if (checkEmptyTextBoxes(['userNameInput', 'passwordInput', 'verificationCodeInput'], false) === false) {
         logMessage('Please fill all the values!', 'rgb(255 0 0 / 1)', true);
     } else {
-        handleElements(['loader'],true)
+        handleElements(['loader'], true)
         let { userNameInputValue, passwordInputValue, verificationCodeInputValue } = fetchTextBoxValues(['userNameInput', 'passwordInput', 'verificationCodeInput'])
         return getCognitoIdentityServiceProvider().confirmForgotPassword({
             ClientId: normalClientId,
@@ -196,19 +196,19 @@ function confirmForgotPassword() {
             Password: passwordInputValue,
             ConfirmationCode: verificationCodeInputValue
         })
-        .promise()
-        .then(() => {
-            switchToLogInView()
-            logMessage('Password changed successfully!', 'blue', true)
-        })
-        .catch(err => {
-            logMessage(err.message, 'red', true)
-            emptyTextBoxes([passwordInput, verificationCodeInput])
+            .promise()
+            .then(() => {
+                switchToLogInView()
+                logMessage('Password changed successfully!', 'blue', true)
+            })
+            .catch(err => {
+                logMessage(err.message, 'red', true)
+                emptyTextBoxes([passwordInput, verificationCodeInput])
 
-        })
-        .finally(() => {
-            handleElements(['loader'], false)
-        })
+            })
+            .finally(() => {
+                handleElements(['loader'], false)
+            })
     }
 }
 
@@ -229,28 +229,28 @@ async function logIn() {
                 PASSWORD: passwordInput.value
             }
         })
-        .promise()
-        .then(async d => {
-            handleElements(['codeInput'], true)
-            handleElements(['logInButton', 'registerButton', 'forgot-password', 'userNameInput', 'passwordInput'], false)
-            codeInput.focus()
-            if (d.ChallengeName === 'MFA_SETUP') {
-                handleElements(['registerMFA'], true)
-                return generateSecretMFA(d.Session)
+            .promise()
+            .then(async d => {
+                handleElements(['codeInput'], true)
+                handleElements(['logInButton', 'registerButton', 'forgot-password', 'userNameInput', 'passwordInput'], false)
+                codeInput.focus()
+                if (d.ChallengeName === 'MFA_SETUP') {
+                    handleElements(['registerMFA'], true)
+                    return generateSecretMFA(d.Session)
 
-            } else {
-                session = d.Session
-                handleElements(['verifyMFA'], true)
-                logMessage('Enter TOTP to login!', 'blue', true)
-            }
-        })
-        .catch(err => {
-            logMessage(err.message, 'red', true)
-            passwordInput.value = ''
-        })
-        .finally(() => {
-            handleElements(['loader'],false)
-        })
+                } else {
+                    session = d.Session
+                    handleElements(['verifyMFA'], true)
+                    logMessage('Enter TOTP to login!', 'blue', true)
+                }
+            })
+            .catch(err => {
+                logMessage(err.message, 'red', true)
+                passwordInput.value = ''
+            })
+            .finally(() => {
+                handleElements(['loader'], false)
+            })
     }
 }
 
@@ -261,20 +261,20 @@ function generateSecretMFA(Session) {
     return getCognitoIdentityServiceProvider().associateSoftwareToken({
         Session
     })
-    .promise()
-    .then((res) => {
-        session = res.Session
-        copyToClipBoard(res.SecretCode)
-        clearLogs(true)
-        return $('#log-login').html(`
+        .promise()
+        .then((res) => {
+            session = res.Session
+            copyToClipBoard(res.SecretCode)
+            clearLogs(true)
+            return $('#log-login').html(`
         <span>MFA is enabled on all the accounts. You will need to complete the following steps to continue.<br> - Download and install virtual device if you don't have it already. You can use either Google Authenticator or Microsoft Authenticator.<br> - Copy this MFA Key <b>${res.SecretCode}</b> into your Virtual Device and save with your ${$('#userNameInput').val()}@serverlessdocs.<br> - Use the code generated in the device to continue.</span>`);
-    })
-    .catch(err => {
-        logMessage(err.message, 'red', true)
-    })
-    .finally(() => {
-        handleElements(['loader'],false)
-    })
+        })
+        .catch(err => {
+            logMessage(err.message, 'red', true)
+        })
+        .finally(() => {
+            handleElements(['loader'], false)
+        })
 }
 
 
@@ -289,19 +289,19 @@ function verifyTotp(challengeType) {
                 Session: session,
                 UserCode: codeInput.value
             })
-            .promise()
-            .then(d => {
-                session = d.session
-                switchToLogInView()
-                return logMessage('Your Authenticator app is registered succesfully, login to continue!', 'blue', true)
-            })
-            .catch(err => {
-                switchToLogInView()
-                logMessage(`${err.message}<br>Your authenticator app registration is failed. Please login again to get new secret!`, 'red', true)
-            })
-            .finally(() => {
-                handleElements(['loader'],false)
-            })
+                .promise()
+                .then(d => {
+                    session = d.session
+                    switchToLogInView()
+                    return logMessage('Your Authenticator app is registered succesfully, login to continue!', 'blue', true)
+                })
+                .catch(err => {
+                    switchToLogInView()
+                    logMessage(`${err.message}<br>Your authenticator app registration is failed. Please login again to get new secret!`, 'red', true)
+                })
+                .finally(() => {
+                    handleElements(['loader'], false)
+                })
         } else {
             return getCognitoIdentityServiceProvider().respondToAuthChallenge({
                 ChallengeName: "SOFTWARE_TOKEN_MFA",
@@ -312,43 +312,43 @@ function verifyTotp(challengeType) {
                 ClientId: normalClientId,
                 Session: session
             })
-            .promise()
-            .then(async d => {
-                idToken = d.AuthenticationResult.IdToken;
-                idTokenPayLoad = parseJwt(idToken)
-                accessToken = d.AuthenticationResult.AccessToken;
-                sessionStorage.setItem('currentSession', JSON.stringify(d.AuthenticationResult))
-                getCognitoIdentityCredentials()
-                .then(() => {
-                    checkUserGroup()
-                    listPublicFiles()
-                    listMyFiles()
-                    showUserName()
-                    emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
-                    clearElements(['public-files-table tbody', 'my-files-table tbody'])
-                    switchToLoggedInView();
-                    checkLoginProvider()
-                    return logMessage(`${idTokenPayLoad['cognito:username']} logged in !`)
+                .promise()
+                .then(async d => {
+                    idToken = d.AuthenticationResult.IdToken;
+                    idTokenPayLoad = parseJwt(idToken)
+                    accessToken = d.AuthenticationResult.AccessToken;
+                    sessionStorage.setItem('currentSession', JSON.stringify(d.AuthenticationResult))
+                    getCognitoIdentityCredentials()
+                        .then(() => {
+                            checkUserGroup()
+                            listPublicFiles()
+                            listMyFiles()
+                            showUserName()
+                            emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
+                            clearElements(['public-files-table tbody', 'my-files-table tbody'])
+                            switchToLoggedInView();
+                            checkLoginProvider()
+                            return logMessage(`${idTokenPayLoad['cognito:username']} logged in !`)
+                        })
                 })
-            })
-            .catch(err => {
-                switchToLogInView()
-                logMessage(err.message, 'red', true)
-                codeInput.value = ''
-            })
-            .finally(() => {
-                handleElements(['loader'],false)
-            })
+                .catch(err => {
+                    switchToLogInView()
+                    logMessage(err.message, 'red', true)
+                    codeInput.value = ''
+                })
+                .finally(() => {
+                    handleElements(['loader'], false)
+                })
         }
     }
 }
 
- 
+
 //If user has logged in before, get the previous session so user doesn't need to log in again.
 function getCurrentLoggedInSession() {
     var url = new URL(window.location.href)
     return new Promise((resolve, reject) => {
-        handleElements(['loader'],true)
+        handleElements(['loader'], true)
         try {
             if (sessionStorage.getItem('currentSession')) {
                 // console.log('if eners')
@@ -371,11 +371,11 @@ function getCurrentLoggedInSession() {
                 hostedUiSession()
             } else {
                 logMessage('Session expired. Please log in again.', 'orange', true);
-                handleElements(['loader'],false)
+                handleElements(['loader'], false)
                 resolve({ status: false, message: 'Session expired.' });
             }
         } catch (e) {
-            handleElements(['loader'],false)
+            handleElements(['loader'], false)
             logMessage(`${e.message} here`, 'rgb(255 0 0 / 1)');
             resolve({ status: false, message: e.message });
         }
@@ -493,34 +493,34 @@ async function changeUserPassword() {
         logMessage('Please fill all the fields!', 'rgb(255 0 0 / 1)');
         handleElements(['logDiv-updatePassword'], true)
         logUpdatePassword.innerHTML = `<span style="color:red">Please fill all the fields!</span>`
-    
+
     } else {
         handleElements(['loader-updatePassword'], true)
         logUpdatePassword.innerHTML = `<span style="color:red"></span>`
         getCognitoIdentityCredentials()
-        .then(() => {
-            return getCognitoIdentityServiceProvider().changePassword({
-                AccessToken: accessToken, 
-                PreviousPassword: currentPassword.value,
-                ProposedPassword: newPassword.value 
+            .then(() => {
+                return getCognitoIdentityServiceProvider().changePassword({
+                    AccessToken: accessToken,
+                    PreviousPassword: currentPassword.value,
+                    ProposedPassword: newPassword.value
+                })
+                    .promise()
+                    .then(d => {
+                        logMessage('Successfully Change Password!', 'blue');
+                        handleElements(['loader-updatePassword'], false)
+                        logOut();
+                        logMessage('Password successfully updated, you need to login again!', 'blue', true)
+                    })
+                    .catch(err => {
+                        logMessage(err.message)
+                        handleElements(['logDiv-updatePassword'], true)
+                        logUpdatePassword.innerHTML = `<span style="color:red">${err.message}</span>`
+                    })
+                    .finally(() => {
+                        emptyTextBoxes(updatePassowrdViewTextBoxes)
+                        handleElements(['loader-updatePassword'], false)
+                    })
             })
-            .promise()
-            .then(d => {
-                logMessage('Successfully Change Password!', 'blue');
-                handleElements(['loader-updatePassword'], false)
-                logOut();
-                logMessage('Password successfully updated, you need to login again!', 'blue', true)
-            })
-            .catch(err => {
-                logMessage(err.message)
-                handleElements(['logDiv-updatePassword'], true)
-                logUpdatePassword.innerHTML = `<span style="color:red">${err.message}</span>`
-            })
-            .finally(() => {
-                emptyTextBoxes(updatePassowrdViewTextBoxes)
-                handleElements(['loader-updatePassword'], false)
-            })
-        })
     }
 }
 
@@ -546,16 +546,16 @@ function getUserId() {
 }
 
 //show username on dropdown
-function showUserName () {
+function showUserName() {
     usernameBox.innerHTML = idTokenPayLoad['cognito:username'] || idTokenPayLoad['name']
 }
 
 
 //JWT tokens decoder
-function parseJwt (token) {
+function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
@@ -567,7 +567,7 @@ function parseJwt (token) {
 
 //function checks login provider and enable and disable update password control
 function checkLoginProvider() {
-    if(idTokenPayLoad["iss"] === 'accounts.google.com') {
+    if (idTokenPayLoad["iss"] === 'accounts.google.com') {
         updatePasswordButton.disabled = true
         handleElements(['updatePasswordDivHandler'], false)
     } else {
@@ -581,124 +581,124 @@ function checkLoginProvider() {
 
 function launchHostedUI() {
     window.location.href = challengeUrls.logIn
-  }
-  
-  
-  //cognito hosted ui sign in function
-  function hostedUiSession() {
+}
+
+
+//cognito hosted ui sign in function
+function hostedUiSession() {
     handleElements(['loader'], true)
     try {
-      if (!sessionStorage.getItem(currentSession)) {
-        var authCode = window.location.href.split('=')[1]
-        window.history.pushState({}, document.title, loggedInRedirectUrl);
-        var theUrl = `${apiEndpoint}/${oauthPath}?authCode=${authCode}&authType=code`
-        xmlHttp.onreadystatechange = function () {
-          let newObject = new Object()
-          if (this.readyState == 4 && this.status == 200) {
-            newObject = JSON.parse(xmlHttp.responseText)
-            currentSession.AccessToken = newObject.access_token
-            currentSession.IdToken = newObject.id_token
-            currentSession.RefreshToken = newObject.refresh_token
-            currentSession.hostedUi = true
-            sessionStorage.setItem('currentSession', JSON.stringify(currentSession))
-            idToken = newObject.id_token
-            idTokenPayLoad = parseJwt(idToken)
-            accessToken = newObject.access_token
-          }
-        };
-        xmlHttp.open("GET", theUrl, false);
-        xmlHttp.setRequestHeader('host', apiEndpoint)
-        xmlHttp.setRequestHeader('Date', new Date().toISOString())
-        xmlHttp.send();
-      }
-      currentSession = JSON.parse(sessionStorage.getItem('currentSession'))
-      validateSession()
-      getCognitoIdentityCredentials()
-      .then(() => {
-        getCognitoIdentityServiceProvider().getUser({ AccessToken: currentSession.AccessToken })
-          .promise()
-          .then(d => {
-            if (!d.UserMFASettingList) {
-              switchToLogInView()
-              logMessage('Registration completed, You need to set up MFA before login!', 'blue', true)
-              sessionStorage.clear()
-              currentSession = new Object()
-            } else {
-              checkUserGroup()
-              showUserName()
-              listPublicFiles()
-              listMyFiles()
-              emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
-              clearElements(['public-files-table tbody', 'my-files-table tbody'])
-              switchToLoggedInView()
-            }
-          })
-      })
+        if (!sessionStorage.getItem(currentSession)) {
+            var authCode = window.location.href.split('=')[1]
+            window.history.pushState({}, document.title, loggedInRedirectUrl);
+            var theUrl = `${apiEndpoint}/${oauthPath}?authCode=${authCode}&authType=code`
+            xmlHttp.onreadystatechange = function () {
+                let newObject = new Object()
+                if (this.readyState == 4 && this.status == 200) {
+                    newObject = JSON.parse(xmlHttp.responseText)
+                    currentSession.AccessToken = newObject.access_token
+                    currentSession.IdToken = newObject.id_token
+                    currentSession.RefreshToken = newObject.refresh_token
+                    currentSession.hostedUi = true
+                    sessionStorage.setItem('currentSession', JSON.stringify(currentSession))
+                    idToken = newObject.id_token
+                    idTokenPayLoad = parseJwt(idToken)
+                    accessToken = newObject.access_token
+                }
+            };
+            xmlHttp.open("GET", theUrl, false);
+            xmlHttp.setRequestHeader('host', apiEndpoint)
+            xmlHttp.setRequestHeader('Date', new Date().toISOString())
+            xmlHttp.send();
+        }
+        currentSession = JSON.parse(sessionStorage.getItem('currentSession'))
+        validateSession()
+        getCognitoIdentityCredentials()
+            .then(() => {
+                getCognitoIdentityServiceProvider().getUser({ AccessToken: currentSession.AccessToken })
+                    .promise()
+                    .then(d => {
+                        if (!d.UserMFASettingList) {
+                            switchToLogInView()
+                            logMessage('Registration completed, You need to set up MFA before login!', 'blue', true)
+                            sessionStorage.clear()
+                            currentSession = new Object()
+                        } else {
+                            checkUserGroup()
+                            showUserName()
+                            listPublicFiles()
+                            listMyFiles()
+                            emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
+                            clearElements(['public-files-table tbody', 'my-files-table tbody'])
+                            switchToLoggedInView()
+                        }
+                    })
+            })
     } catch (e) {
-      handleElements(['loader'], false)
-      logMessage(`${e.message}`, 'rgb(255 0 0 / 1)');
+        handleElements(['loader'], false)
+        logMessage(`${e.message}`, 'rgb(255 0 0 / 1)');
     }
     handleElements(['loader'], false)
-  }
-  
-  //validate or refresh cognito hosted ui session with lambda endpoint
-  function validateSession() {
+}
+
+//validate or refresh cognito hosted ui session with lambda endpoint
+function validateSession() {
     currentSession = JSON.parse(sessionStorage.getItem('currentSession'))
     if (!currentSession) window.location = challengeUrls.logIn
     var id_token = parseJwt(currentSession.IdToken)
     var expiry = new Date(id_token.exp * 1000)
     logMessage(`Session will end at ${expiry.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`)
     if (new Date().getTime() > expiry) {
-      logMessage('Session Expired!')
-      var theUrl = `${apiEndpoint}/${oauthPath}?refresh_token=${currentSession.refresh_token}&authType=refresh`
-      xmlHttp.onreadystatechange = function () {
-        let newObject = new Object()
-        if (this.readyState == 4 && this.status == 200) {
-          newObject = JSON.parse(xmlHttp.responseText)
-          currentSession.AccessToken = newObject.access_token
-          currentSession.IdToken = newObject.id_token
-          currentSession.RefreshToken = newObject.refresh_token
-          currentSession.hostedUi = true
-          sessionStorage.setItem('currentSession', JSON.stringify(currentSession))
-          logMessage('Session renewed!', 'blue')
-        }
-      };
-      xmlHttp.open("GET", theUrl, false);
-      xmlHttp.setRequestHeader('host', apiEndpoint)
-      xmlHttp.setRequestHeader('Date', new Date().toISOString())
-      xmlHttp.send();
+        logMessage('Session Expired!')
+        var theUrl = `${apiEndpoint}/${oauthPath}?refresh_token=${currentSession.refresh_token}&authType=refresh`
+        xmlHttp.onreadystatechange = function () {
+            let newObject = new Object()
+            if (this.readyState == 4 && this.status == 200) {
+                newObject = JSON.parse(xmlHttp.responseText)
+                currentSession.AccessToken = newObject.access_token
+                currentSession.IdToken = newObject.id_token
+                currentSession.RefreshToken = newObject.refresh_token
+                currentSession.hostedUi = true
+                sessionStorage.setItem('currentSession', JSON.stringify(currentSession))
+                logMessage('Session renewed!', 'blue')
+            }
+        };
+        xmlHttp.open("GET", theUrl, false);
+        xmlHttp.setRequestHeader('host', apiEndpoint)
+        xmlHttp.setRequestHeader('Date', new Date().toISOString())
+        xmlHttp.send();
     }
-  }
-  
+}
 
 
 //function handles google sign in
 function onSignIn(googleUser) {
-    console.log('invoked')
+    console.log('Google Default Auth function invoked with payload -> ', googleUser)
     var profile = googleUser.getBasicProfile();
-    
-    currentSession.IdToken = googleUser.wc.id_token
-    idToken = googleUser.wc.id_token
+    var authProfile = googleUser.getAuthResponse(true);
+    console.log('Returned user details and auth profile from googleUser -> ', profile, authProfile)
+
+    currentSession.IdToken = authProfile.id_token
+    idToken = authProfile.id_token
     idTokenPayLoad = parseJwt(idToken)
-    
-    currentSession.AccessToken = googleUser.wc.access_token
-    accessToken = googleUser.wc.access_token
+
+    currentSession.AccessToken = authProfile.access_token
+    accessToken = authProfile.access_token
     // accessTokenPayLoad = parseJwt(accessToken)
-    
+
     currentSession.googleUser = true
-    sessionStorage.setItem('currentSession', JSON.stringify(currentSession)) 
-    
+    sessionStorage.setItem('currentSession', JSON.stringify(currentSession))
+
     getCognitoIdentityCredentials()
-    .then(() => {
-        checkUserGroup()
-        checkLoginProvider()
-        showUserName()
-        listPublicFiles()
-        listMyFiles()
-        emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
-        clearElements(['public-files-table tbody', 'my-files-table tbody'])
-        switchToLoggedInView()
-    })
-    
-  }
-  
+        .then(() => {
+            checkUserGroup()
+            checkLoginProvider()
+            showUserName()
+            listPublicFiles()
+            listMyFiles()
+            emptyTextBoxes([...loginViewTextBoxes, ...registerViewTextBoxes, ...verificationViewTextBoxes])
+            clearElements(['public-files-table tbody', 'my-files-table tbody'])
+            switchToLoggedInView()
+        })
+
+}
