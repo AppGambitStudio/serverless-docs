@@ -25,10 +25,6 @@ The app currently has two deployment setups, 1) Serverless Framework and 2) SAM.
 
 Deploy the backend with `sls deploy --stage ` and use the output variables in `serverless-docs-frontend/app-config.js` file.
 
-## ServerlessDocs Backend - SAM
-Updating Soon
-
-
 # Contributors
 I couldn't do it alone :) and glad that I work with AWSome people to help me.
 
